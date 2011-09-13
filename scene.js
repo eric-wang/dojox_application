@@ -401,6 +401,9 @@ define(["dojo/_base/kernel",
 				bind(this.getChildren(), this.loadedModels);
 			}
 			
+			//startup assumes all children are loaded into DOM before startup is called
+			//startup will only start the current available children.
+
 			var cid = this.id + "_" + toId;
             if (this.children[cid]) {
 				var next = this.children[cid];
@@ -575,9 +578,8 @@ define(["dojo/_base/kernel",
 				deferred.when(promise, function(){
 				    transitionDeferred.resolve();
 				});
-				return transitionDeferred;
-				
 			}));
+			return transitionDeferred;
 		},
 		toString: function(){return this.id},
 
