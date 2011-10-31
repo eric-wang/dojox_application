@@ -1,0 +1,173 @@
+{
+	"id": "showcase",
+	"name": "Dojox.app showcase App",
+	"description": "Dojox.app showcase App",
+	"splash": "splash",
+
+	"dependencies": [
+		"dojox/mobile/compat",
+		"dojox/mobile/View",
+		"dojox/mobile/TabBar",
+		"dojox/mobile/RoundRect",
+		"dojox/mobile/TabBarButton",
+		"dojox/mobile/Button",
+		"dojox/mobile/RoundRect",
+		"dojox/mobile/Heading",
+		"dojox/mobile/RoundRectList",
+		"dojox/mobile/EdgeToEdgeCategory",
+		"dojox/mobile/EdgeToEdgeList",
+		"dojox/mobile/ListItem",
+		"dojox/mobile/ScrollableView"
+	],
+	// Modules for the app.  The are basically used as the second
+	// array of mixins in a dojo.declare().  Modify the top level behavior
+	// of the app, how it processes the config or any other life cycle
+	// by creating and including one or more of these
+	"modules": [
+		"dojox/app/module/env",
+		"dojox/app/module/history",
+		"dojox/app/module/lifecycle"
+	],
+
+	//stores we are using
+	"stores": {},
+
+	"template": "application.html",
+
+	//models and instantiation parameters for the models. Including 'type' as a property allows
+	//one to overide the class that will be used for the model.  By default it is dojox/mvc/model
+	"models": {},
+
+	//the name of the scene to load when the app is initialized.
+	"defaultView": "button",
+
+	"defaultTransition": "slide",
+	//scenes are groups of views and models loaded at once
+	"views": {
+		"button":{
+			"type": "dojox.app.view",
+			"dependencies":[
+				"dojox/mobile/Button",
+				"dojox/mobile/TabBar",
+				"dojox/mobile/TabBarButton"
+			],
+			"template": "views/buttons.html"
+		},
+
+		"form":{
+			"type": "dojox.app.view",
+			"dependencies":[
+				"dojox/mobile/TextBox",
+				"dojox/mobile/CheckBox",
+				"dojox/mobile/TextArea",
+				"dojox/mobile/RadioButton",
+				"dojox/mobile/Switch",
+				"dojox/mobile/Slider"
+			],
+			"template": "views/forms.html"
+		},
+
+		"switch":{
+			"type": "dojox.app.view",
+			"dependencies":[
+				"dojox/mobile/RoundRect",
+				"dojox/mobile/Switch"
+			],
+			"template": "views/mobileSwitches.html"
+		},
+
+		"flip":{
+			"type": "dojox.app.view",
+			"dependencies":[
+				"dojox/mobile/SwapView",
+			],
+			"template": "views/flippableViews.html"
+		},
+
+		"icon":{
+			"type": "dojox.app.view",
+			"dependencies":[
+				"dojox/mobile/IconContainer",
+				"dojox/mobile/IconItem"
+			],
+			"template": "views/icons.html"
+		},
+
+		"tabBar":{
+			"type": "dojox.app.view",
+			"dependencies":[
+				"dojox/mobile/TextBox",
+				"dojox/mobile/CheckBox",
+				"dojox/mobile/TextArea",
+				"dojox/mobile/RadioButton",
+				"dojox/mobile/Switch",
+				"dojox/mobile/Slider"
+			],
+			"template": "views/tabBar.html"
+		},
+
+		"heading":{
+			"type": "dojox.app.view",
+			"dependencies":[
+				"dojox/mobile/Heading",
+				"dojox/mobile/ToolBarButton",
+				"dojox/mobile/ToggleButton",
+				"dojox/mobile/TabBar"
+			],
+			"template": "views/headings.html"
+		},
+
+		"map":{
+			"type": "dojox.app.view",
+			"template": "views/map.html"
+		},
+
+		"list":{
+			"type": "dojox.app.view",
+			"dependencies":[
+				"dojox/mobile/EdgeToEdgeCategory",
+				"dojox/mobile/EdgeToEdgeList",
+				"dojox/mobile/ListItem"
+			],
+			"template": "views/list.html"
+		},
+
+		"listData":{
+			"type": "dojox.app.view",
+			"dependencies":[
+				"dojox/mobile/RoundRectDataList",
+				"dojox/app/tests/showcase/src/mobileListData"
+			],
+			"template": "views/mobileListData.html"
+		},
+
+		"transition":{
+			"type": "dojox.app.view",
+			"dependencies":[
+			],
+			"template": "views/mobileTransitions.html"
+		},
+
+		"css3":{
+			"type": "dojox.app.view",
+			"dependencies":[
+				"dojox/app/tests/showcase/src/css3"
+			],
+			"template": "views/css3.html"
+		},
+
+		"jsonp":{
+			"type": "dojox.app.view",
+			"dependencies":[
+			],
+			"template": "views/jsonp.html"
+		},
+
+		"ajax":{
+			"type": "dojox.app.view",
+			"dependencies":[
+			],
+			"template": "views/ajax.html"
+		}
+	}
+}

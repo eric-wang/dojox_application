@@ -1,0 +1,12 @@
+<div class="view mblView">
+	<div id="css3" dojoType="dojox.mobile.ScrollableView">
+		<div id="css3ribbon">dojox.css3</div>
+	    <div id="css3Boxes"></div>
+	</div>
+	<script type="text/javascript">
+		require(["./src/css3.js"], function(mycss) {
+			mycss.init();
+			console.log("init css3 ok.");
+		});
+	</script>
+</div>

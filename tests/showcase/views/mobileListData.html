@@ -1,0 +1,23 @@
+<div class="view mblView">
+<div id="mobileLists" dojoType="dojox.mobile.ScrollableView">
+	<div id="mobileListCtrlPanel">
+		<div id="mobileListSetBtns">
+			<input id="mobileListSet1Btn" type="button" value="Set 1" class="mobileListSelected" onclick="dojox.app.tests.showcase.src.mobileLists.switchTo(1);"></input>
+			<input id="mobileListSet2Btn" type="button" value="Set 2" class="mobileListUnselected" onclick="dojox.app.tests.showcase.src.mobileLists.switchTo(2);"></input>
+		</div>
+
+		<div id="dataListHint"><span id="listLengthLabel">5</span> items</div>
+
+		<div style="right:16px;">
+			<div id="mobileListAddBtn" class="mblDomButtonBluePlus" onclick="dojox.app.tests.showcase.src.mobileLists.add1()"></div>
+			<div id="mobileListDelBtn" class="mblDomButtonRedMinus" onclick="dojox.app.tests.showcase.src.mobileLists.delete1()"></div>
+		</div>
+	</div>
+	<ul dojoType="dojox.mobile.RoundRectDataList" id="mobileListsDataList" store="dojox.app.tests.showcase.src.mobileLists.listsStore" query="{label: '*'}"></ul>
+</div>
+	<script type="text/javascript">
+		require(["./src/mobileListData.js"], function(mobilelists) {
+			mobilelists.init();
+		});
+	</script>
+</div>
