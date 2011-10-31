@@ -1,4 +1,5 @@
 define(["dojo/_base/kernel",
+	"dojo/_base/window",
 	"dojo/_base/declare",
 	"dojo/_base/connect",
 	"dojo/_base/array",
@@ -21,7 +22,7 @@ define(["dojo/_base/kernel",
 	"./model", 
 	"./view", 
 	"./bind"], 
-	function(dojo,declare,connect, array,deferred,dlang,has,dstyle,dgeometry,cls,dconstruct,dattr,query,dijit,dojox,WidgetBase,Templated,WidgetsInTemplate,transit, anim, model, baseView, bind){
+	function(dojo, win, declare,connect, array,deferred,dlang,has,dstyle,dgeometry,cls,dconstruct,dattr,query,dijit,dojox,WidgetBase,Templated,WidgetsInTemplate,transit, anim, model, baseView, bind){
 	
 	var marginBox2contentBox = function(/*DomNode*/ node, /*Object*/ mb){
 		// summary:
@@ -432,6 +433,34 @@ define(["dojo/_base/kernel",
 				array.forEach(this.getChildren(), function(child){
 					child.startup();
 				});
+
+				// Because Android flicker issue workaround in dojox.mobile.common startup before dojox.app application layout,
+				// it will cause the application first time layout failed.
+				// To workaround this issue, we disable dojox.mobile.common Android workaround in index.html by dojoConfig={mblAndroidWorkaround: false} and
+				// do workaround in dojox.app after the application first time layout.
+				if (!this._workaroundAndroid) {
+					this._workaroundAndroid = true;
+
+					if (has('android') >= 2.2) {
+						if (has('android') < 3) { // for Android 2.2.x and 2.3.x
+							//------ TODO: fix first time layout failed in here ----//
+							dstyle.set(win.doc.documentElement, "webkitTransform", "translate3d(0,0,0)");
+							// workaround for auto-scroll issue when focusing input fields
+							connect.connect(null, "onfocus", null, function(e){
+								dstyle.set(win.doc.documentElement, "webkitTransform", "");
+							});
+							connect.connect(null, "onblur", null, function(e){
+								dstyle.set(win.doc.documentElement, "webkitTransform", "translate3d(0,0,0)");
+							});
+						}
+						else { // for Android 3.x
+							dstyle.set(win.doc.documentElement, {
+								webkitBackfaceVisibility: "hidden",
+								webkitPerspective: 8000
+							});
+						}
+					}
+				}
 
 				//transition to _startView
               if (this._startView && (this._startView != this.defaultView)) {
