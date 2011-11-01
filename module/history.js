@@ -14,18 +14,23 @@ define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/declare", "dojo/on"],
 
 		onStartTransition: function(evt){
 			console.log("onStartTransition", evt.detail.href, history.state);
-			if (evt.preventDefault){
-				evt.preventDefault();
-			}
 
 			var target = evt.detail.target;
 			var regex = /#(.+)/;
 			if(!target && regex.test(evt.detail.href)){
 				target = evt.detail.href.match(regex)[1];
 			}
-			
+
+			// If it is a internal moveTo transition, DO NOT stop the bubbling and exit dojox.app transition.
+			// Then we can use the default ViewController to do View moveTo transition.
+			if(!target && evt.detail.moveTo){
+				return;
+			}
 			//prevent event from bubbling to window and being
 			//processed by dojox/mobile/ViewController
+			if (evt.preventDefault){
+				evt.preventDefault();
+			}
 			evt.cancelBubble = true;
 			if(evt.stopPropagation){
 			    evt.stopPropagation();
