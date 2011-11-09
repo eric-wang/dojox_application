@@ -1054,9 +1054,13 @@ var scrollable = function(/*Object?*/dojo, /*Object?*/dojox){
 	};
 
 	// TODO: remove dojo mobile resizeAll and let dojox.app layout container do resize layout.
-	var f = dm.resizeAll;
-	connect.connect(null, (win.global.onorientationchange !== undefined && !has('android'))
-			? "onorientationchange" : "onresize", null, f);
+//	var f = dm.resizeAll;
+//	connect.connect(null, (win.global.onorientationchange !== undefined && !has('android'))
+//			? "onorientationchange" : "onresize", null, f);
+
+	if(!dm.disableResizeAll){
+		dm.disableResizeAll = true;
+	}
 };
 
 return scrollable;
