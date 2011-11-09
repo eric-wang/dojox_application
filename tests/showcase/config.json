@@ -17,7 +17,8 @@
 		"dojox/mobile/EdgeToEdgeCategory",
 		"dojox/mobile/EdgeToEdgeList",
 		"dojox/mobile/ListItem",
-		"dojox/mobile/ScrollableView"
+		"dojox/app/container",
+		"dojox/app/pane"
 	],
 	// Modules for the app.  The are basically used as the second
 	// array of mixins in a dojo.declare().  Modify the top level behavior
@@ -39,11 +40,24 @@
 	"models": {},
 
 	//the name of the scene to load when the app is initialized.
-	"defaultView": "button",
+	"defaultView": "welcome",
 
 	"defaultTransition": "slide",
 	//scenes are groups of views and models loaded at once
 	"views": {
+		"navigation":{
+			"type": "dojox.app.view",
+			"dependencies":[
+			],
+			"template": "views/navigation.html"
+		},
+
+		"welcome":{
+			"type": "dojox.app.view",
+			"dependencies":[
+			],
+			"template": "views/welcome.html"
+		},
 		"button":{
 			"type": "dojox.app.view",
 			"dependencies":[
@@ -73,7 +87,7 @@
 				"dojox/mobile/RoundRect",
 				"dojox/mobile/Switch"
 			],
-			"template": "views/mobileSwitches.html"
+			"template": "views/switches.html"
 		},
 
 		"flip":{
@@ -138,14 +152,14 @@
 				"dojox/mobile/RoundRectDataList",
 				"dojox/app/tests/showcase/src/mobileListData"
 			],
-			"template": "views/mobileListData.html"
+			"template": "views/listData.html"
 		},
 
 		"transition":{
 			"type": "dojox.app.view",
 			"dependencies":[
 			],
-			"template": "views/mobileTransitions.html"
+			"template": "views/transitions.html"
 		},
 
 		"css3":{

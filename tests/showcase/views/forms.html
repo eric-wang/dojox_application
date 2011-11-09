@@ -1,5 +1,5 @@
 <div class="view mblView">
-    <div id="forms" dojoType="dojox.mobile.ScrollableView" style="width: 100%;">
+	<div dojoType="dojox.app.container">
         <form name="testForm" id="testForm">
             <div class="field-title">
                 Personal Data
@@ -69,7 +69,7 @@
                 </button>
             </div>
         </form>
-    </div>
+	</div>
 	<script type="text/javascript">
 		require(["dojo/dom","dojo/on","dijit/registry"], function(dom, on, registry) {
 			on(registry.byId("resetBtn"), "click", function(){

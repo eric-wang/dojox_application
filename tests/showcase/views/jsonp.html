@@ -1,5 +1,5 @@
 <div class="view mblView">
-    <div id="jsonp" dojoType="dojox.mobile.View">
+	<div dojoType="dojox.app.container">
         <div dojoType="dojox.mobile.Heading" style="text-align:left;">
             <input id ="searchKeywords" type="search" results="5" value="dojo javascript">
             </input>
@@ -7,7 +7,7 @@
                 Search Twitter
             </button>
         </div>
-        <div id="resultPanel" dojoType="dojox.mobile.ScrollableView" selected="true">
+        <div id="resultPanel" dojoType="dojox.mobile.View" selected="true">
             <div id="searchResults" style="display:none;">
             </div>
             <div id="findMoreDiv">

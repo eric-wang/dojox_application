@@ -1,83 +1,81 @@
 <div>
 	<!-- left -->
-    <div id="LeftRegion" region="left" style="width: 240px;" dojoType="dojox.app.view">
-        <h1 id="leftHeader" dojoType="dojox.mobile.Heading">
+	<div dojoType="dojox.app.pane" class="navPane" region="left">
+		<h1 region="top" dojoType="dojox.mobile.Heading">
             Showcase
 	</h1>
-        <div id="navigation" dojoType="dojox.mobile.ScrollableView">
+		<div dojoType="dojox.app.container" region="center">
             <h2 dojoType="dojox.mobile.EdgeToEdgeCategory">Controls</h2>
             <ul dojoType="dojox.mobile.EdgeToEdgeList" iconBase="images/navigation_list_all_29.png">
                 <li dojoType="dojox.mobile.ListItem" iconPos="0,0,29,29" clickable="true" transitionOptions='{title:"Button",target:"button",url: "#button"}'>
-                    Buttons
+	                Buttons<sup>1.6</sup>
                 </li>
                 <li dojoType="dojox.mobile.ListItem" iconPos="29,0,29,29" clickable="true" transitionOptions='{title:"Form",target:"form",url: "#form"}'>
-                    Forms
+	                Forms<sup>1.6</sup>
                 </li>
                 <li dojoType="dojox.mobile.ListItem" iconPos="29,0,29,29" clickable="true" transitionOptions='{title:"Switch",target:"switch",url: "#switch"}'>
-                    Switches
+	                Switches<sup>1.7</sup>
                 </li>
                 <li dojoType="dojox.mobile.ListItem" iconPos="58,0,29,29" clickable="true" transitionOptions='{title:"Flippable",target:"flip",url: "#flip"}'>
-                    Flippable
+	                Flippable<sup>1.6</sup>
                 </li>
                 <li dojoType="dojox.mobile.ListItem" iconPos="87,0,29,29" clickable="true" transitionOptions='{title:"Icon",target:"icon",url: "#icon"}'>
-                    Icons
+	                Icons<sup>1.6</sup>
                 </li>
                 <li dojoType="dojox.mobile.ListItem" iconPos="116,0,29,29" clickable="true" transitionOptions='{title:"TabBar",target:"tabBar",url: "#tabBar"}'>
-                    Tab Bar
+	                Tab Bar<sup>1.6</sup>
                 </li>
                 <li dojoType="dojox.mobile.ListItem" iconPos="145,0,29,29" clickable="true" transitionOptions='{title:"Heading",target:"heading",url: "#heading"}'>
-                    Headings
+	                Headings<sup>1.6</sup>
                 </li>
                 <li dojoType="dojox.mobile.ListItem" iconPos="174,0,29,29" clickable="true" transitionOptions='{title:"Map",target:"map",url: "#map"}'>
-                    Map (Google)
+	                Map (Google)<sup>1.6</sup>
                 </li>
                 <li dojoType="dojox.mobile.ListItem" iconPos="203,0,29,29" clickable="true" transitionOptions='{title:"List",target:"list",url: "#list"}'>
-                    Lists
+	                Lists<sup>1.6</sup>
                 </li>
                 <li dojoType="dojox.mobile.ListItem" iconPos="203,0,29,29" clickable="true" transitionOptions='{title:"ListData",target:"listData",url: "#listData"}'>
-                    List Data
+	                List Data<sup>1.7</sup>
                 </li>
                 <li dojoType="dojox.mobile.ListItem" iconPos="232,0,29,29" clickable="true">
-                    Gauge
+	                Gauge<sup>1.7</sup>
                 </li>
                 <li dojoType="dojox.mobile.ListItem" iconPos="377,0,29,29" clickable="true">
-                    Chart
+	                Chart<sup>1.7</sup>
                 </li>
                 <li dojoType="dojox.mobile.ListItem" iconPos="377,0,29,29" clickable="true">
-                    Geo Chart
+	                Geo Chart<sup>1.7</sup>
                 </li>
                 <li dojoType="dojox.mobile.ListItem" iconPos="174,0,29,29" clickable="true">
-                    OpenLayers Map
+	                OpenLayers Map<sup>1.7</sup>
                 </li>
                 <li dojoType="dojox.mobile.ListItem" iconPos="261,0,29,29" clickable="true">
-                    Touch
+	                Touch<sup>1.7</sup>
                 </li>
             </ul>
             <h2 dojoType="dojox.mobile.EdgeToEdgeCategory">Effects</h2>
             <ul dojoType="dojox.mobile.EdgeToEdgeList" iconBase="images/navigation_list_all_29.png">
                 <li dojoType="dojox.mobile.ListItem" iconPos="290,0,29,29" clickable="true" transitionOptions='{title:"Transition",target:"transition",url: "#transition"}'>
-                    Transitions
+	                Transitions<sup>1.7</sup>
                 </li>
                 <li dojoType="dojox.mobile.ListItem" iconPos="406,0,29,29" clickable="true" transitionOptions='{title:"CSS3",target:"css3",url: "#css3"}'>
-                    CSS 3
+	                CSS 3<sup>1.6</sup>
                 </li>
             </ul>
             <h2 dojoType="dojox.mobile.EdgeToEdgeCategory">Data</h2>
             <ul dojoType="dojox.mobile.EdgeToEdgeList" iconBase="images/navigation_list_all_29.png">
                 <li dojoType="dojox.mobile.ListItem" iconPos="319,0,29,29" clickable="true" transitionOptions='{title:"JSONP",target:"jsonp",url: "#jsonp"}'>
-                    JSON P
+	                JSON P<sup>1.6</sup>
                 </li>
                 <li dojoType="dojox.mobile.ListItem" iconPos="348,0,29,29" clickable="true" transitionOptions='{title:"AJAX",target:"ajax",url: "#ajax"}'>
-                    AJAX
+	                AJAX<sup>1.6</sup>
                 </li>
             </ul>
         </div>
     </div>
 
 	<!-- top -->
-	<div id="TopRegion" region="top" dojoType="dojox.app.view">
-        <h1 id="header" dojoType="dojox.mobile.Heading" back="Back">
+    <h1 id="header" region="top" dojoType="dojox.mobile.Heading" back="Back">
 		Header
-        </h1>
-	</div>
+    </h1>
 </div>
