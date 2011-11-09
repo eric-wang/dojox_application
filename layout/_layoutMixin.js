@@ -68,7 +68,7 @@ define([
 				// monitor when my size changes so that I can re-layout.
 				// For browsers where I can't directly monitor when my size changes,
 				// monitor when the viewport changes size, which *may* indicate a size change for me.
-				this.connect(has("ie") ? this.domNode : win.global, 'onresize', function(){
+				this.connect((has("ie")<9) ? this.domNode : win.global, 'onresize', function(){
 					// Using function(){} closure to ensure no arguments to resize.
 					this.resize();
 				});
