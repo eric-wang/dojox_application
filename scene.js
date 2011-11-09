@@ -20,10 +20,10 @@ define(["dojo/_base/kernel",
 	"./model", 
 	"./view", 
 	"./bind",
-    "./layout/utils"], 
-	function(dojo,declare,connect, array,deferred,dlang,has,dstyle,dgeometry,cls,dconstruct,dattr,query,dijit,dojox,WidgetBase,Templated,WidgetsInTemplate,transit, model, baseView, bind,layoutUtils){
+	"./layout/_layoutMixin"], 
+	function(dojo,declare,connect, array,deferred,dlang,has,dstyle,dgeometry,cls,dconstruct,dattr,query,dijit,dojox,WidgetBase,Templated,WidgetsInTemplate,transit, model, baseView, bind,layoutMixin){
 	
-	return declare("dojox.app.scene", [dijit._WidgetBase, dijit._TemplatedMixin, dijit._WidgetsInTemplateMixin], {
+	return declare("dojox.app.scene", [WidgetBase, Templated, WidgetsInTemplate, layoutMixin], {
 		isContainer: true,
 		widgetsInTemplate: true,
 		defaultView: "default",
@@ -50,7 +50,6 @@ define(["dojo/_base/kernel",
 		buildRendering: function(){
 			this.inherited(arguments);
 			dstyle.set(this.domNode, {width: "100%", "height": "100%"});
-			cls.add(this.domNode,"dijitContainer");
 		},
 
 		splitChildRef: function(childId){
@@ -149,118 +148,6 @@ define(["dojo/_base/kernel",
 			throw Error("Child '" + childId + "' not found.");
 		},
 
-		resize: function(changeSize,resultSize){
-			var node = this.domNode;
-
-			// set margin box size, unless it wasn't specified, in which case use current size
-			if(changeSize){
-				dgeometry.setMarginBox(node, changeSize);
-
-				// set offset of the node
-				if(changeSize.t){ node.style.top = changeSize.t + "px"; }
-				if(changeSize.l){ node.style.left = changeSize.l + "px"; }
-			}
-
-			// If either height or width wasn't specified by the user, then query node for it.
-			// But note that setting the margin box and then immediately querying dimensions may return
-			// inaccurate results, so try not to depend on it.
-			var mb = resultSize || {};
-			dojo.mixin(mb, changeSize || {});	// changeSize overrides resultSize
-			if( !("h" in mb) || !("w" in mb) ){
-				mb = dojo.mixin(dgeometry.getMarginBox(node), mb);	// just use dojo.marginBox() to fill in missing values
-			}
-
-			// Compute and save the size of my border box and content box
-			// (w/out calling dojo.contentBox() since that may fail if size was recently set)
-			var cs = dstyle.getComputedStyle(node);
-			var me = dgeometry.getMarginExtents(node, cs);
-			var be = dgeometry.getBorderExtents(node, cs);
-			var bb = (this._borderBox = {
-				w: mb.w - (me.w + be.w),
-				h: mb.h - (me.h + be.h)
-			});
-			var pe = dgeometry.getPadExtents(node, cs);
-			this._contentBox = {
-				l: dstyle.toPixelValue(node, cs.paddingLeft),
-				t: dstyle.toPixelValue(node, cs.paddingTop),
-				w: bb.w - pe.w,
-				h: bb.h - pe.h
-			};
-
-			// Callback for widget to adjust size of its children
-			this.layout();
-		},
-
-		layout: function(){
-			var fullScreenScene,children,hasCenter;
-			//console.log("fullscreen: ", this.selectedChild && this.selectedChild.isFullScreen);
-			if (this.selectedChild && this.selectedChild.isFullScreen) {
-				console.warn("fullscreen sceen layout");
-				/*
-				fullScreenScene=true;		
-				children=[{domNode: this.selectedChild.domNode,region: "center"}];
-				dojo.query("> [region]",this.domNode).forEach(function(c){
-					if(this.selectedChild.domNode!==c.domNode){
-						dojo.style(c.domNode,"display","none");
-					}
-				})
-				*/
-			}else{
-				children = query("> [region]", this.domNode).map(function(node){
-					var w = dijit.getEnclosingWidget(node);
-					if (w){return w;}
-
-					return {		
-						domNode: node,
-						region: dattr.get(node,"region")
-					}
-						
-				});
-				if (this.selectedChild){
-					children = array.filter(children, function(c){
-						if (c.region=="center" && this.selectedChild && this.selectedChild.domNode!==c.domNode){
-							dstyle.set(c.domNode,"zIndex",25);
-							dstyle.set(c.domNode,'display','none');
-							return false;
-						}else if (c.region!="center"){
-							dstyle.set(c.domNode,"display","");
-							dstyle.set(c.domNode,"zIndex",100);
-						}
-					
-						return c.domNode && c.region;
-					},this);
-
-				//	this.selectedChild.region="center";	
-				//	dojo.attr(this.selectedChild.domNode,"region","center");
-				//	dojo.style(this.selectedChild.domNode, "display","");
-				//	dojo.style(this.selectedChild.domNode,"zIndex",50);
-
-				//	children.push({domNode: this.selectedChild.domNode, region: "center"});	
-				//	children.push(this.selectedChild);
-				//	console.log("children: ", children);
-				}else{
-					array.forEach(children, function(c){
-						if (c && c.domNode && c.region=="center"){
-							dstyle.set(c.domNode,"zIndex",25);
-							dstyle.set(c.domNode,'display','none');
-						}	
-					});
-				}
-			
-			}	
-			// We don't need to layout children if this._contentBox is null for the operation will do nothing.
-			if (this._contentBox) {
-				layoutUtils.layoutChildren(this.domNode, this._contentBox, children);
-			}
-			array.forEach(this.getChildren(), function(child){ 
-				if (!child._started && child.startup){
-					child.startup(); 
-				}
-
-			});
-
-		},
-
 		getChildren: function(){
 			return this._supportingWidgets;
 		},
@@ -290,37 +177,21 @@ define(["dojo/_base/kernel",
 
 			var cid = this.id + "_" + toId;
             if (this.children[cid]) {
-				var next = this.children[cid];
-
-				this.set("selectedChild", next);
+				// call _layoutMixin startup to layout children first
+				this.inherited(arguments);
 				
-				// If I am a not being controlled by a parent layout widget...
-				var parent = this.getParent && this.getParent();
-				if (!(parent && parent.isLayoutContainer)) {
-					// Do recursive sizing and layout of all my descendants
-					// (passing in no argument to resize means that it has to glean the size itself)
-					this.resize();
-					
-					// Since my parent isn't a layout container, and my style *may be* width=height=100%
-					// or something similar (either set directly or via a CSS class),
-					// monitor when my size changes so that I can re-layout.
-					// For browsers where I can't directly monitor when my size changes,
-					// monitor when the viewport changes size, which *may* indicate a size change for me.
-					this.connect(has("ie") ? this.domNode : dojo.global, 'onresize', function(){
-						// Using function(){} closure to ensure no arguments to resize.
-						this.resize();
-					});
-					
-				}
-				
+				// startup children
 				array.forEach(this.getChildren(), function(child){
 					child.startup();
 				});
 
+				// select the loaded child
+				var next = this.children[cid];
+				this.set("selectedChild", next);
 				//transition to _startView
-              if (this._startView && (this._startView != this.defaultView)) {
-                  this.transition(this._startView, {});
-              }
+				if (this._startView && (this._startView != this.defaultView)) {
+					this.transition(this._startView, {});
+				}
 			}
 		},
 
@@ -351,7 +222,6 @@ define(["dojo/_base/kernel",
 
 		_setSelectedChildAttr: function(child,opts){
 			if (child !== this.selectedChild) { 
-				return deferred.when(child, dlang.hitch(this, function(child){
 					if (this.selectedChild){
 						if (this.selectedChild.deactivate){
 							this.selectedChild.deactivate(); 
@@ -374,11 +244,10 @@ define(["dojo/_base/kernel",
 							child.startup();
 						}else if (child.activate){
 							child.activate();
-						}
 		
 					}
-					this.layout();
-				}));
+				}
+				this.layout();
 			}
 		},
 
