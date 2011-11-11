@@ -1,6 +1,6 @@
-define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_Container", "dijit/_Contained","dijit/_TemplatedMixin","dijit/_WidgetsInTemplateMixin","./layout/_layoutMixin"],
-	function(declare,Widget,Container,Contained,TemplatedMixin,WidgetsInTemplateMixin, layoutMixin){
-	return declare("dojox.app.view", [Widget,TemplatedMixin,Container,Contained, WidgetsInTemplateMixin, layoutMixin], {
+define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_Container", "dijit/_Contained","dijit/_TemplatedMixin","dijit/_WidgetsInTemplateMixin","./layout/_layoutMixin", "./controller/viewcontroller"],
+	function(declare,Widget,Container,Contained,TemplatedMixin,WidgetsInTemplateMixin, layoutMixin, viewcontroller){
+	return declare("dojox.app.view", [Widget,TemplatedMixin,Container,Contained, WidgetsInTemplateMixin, layoutMixin, viewcontroller], {
 		selected: false,
 		keepScrollPosition: true,
 		baseClass: "applicationView mblView",
@@ -21,6 +21,9 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_Container", "dijit/_C
 
 			// call _layoutMixin startup to layout children
 			this.inherited(arguments);
+
+			// call view controller _init method
+			this._init();
 		}
 	});
 });

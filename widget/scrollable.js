@@ -287,7 +287,6 @@ var scrollable = function(/*Object?*/dojo, /*Object?*/dojox){
 		//		height. If nothing is specified as the height property, from the
 		//		current top position of the widget to the bottom of the screen
 		//		will be the new height.
-		console.log("resize scrollable view ", changeSize);
 		if(changeSize){
 			this.domNode.style.height = changeSize.h+'px';
 			this.domNode.style.width = changeSize.w+'px';
