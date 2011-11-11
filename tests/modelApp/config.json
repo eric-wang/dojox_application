@@ -5,6 +5,7 @@
 	"splash": "splash",
 
 	"dependencies": [
+		"dojox/mobile/compat",
 		"dojox/mobile/_base",
 		"dojox/mobile/TabBar",
 		"dojox/mobile/RoundRect",
@@ -73,6 +74,7 @@
 			"type": "dojox.app.view",
 			"template": "views/simple.html",			
 			"dependencies":["dojox/mobile/TextBox"],
+			"jsmodule": "script/simple.js"
 		},
 
 		"repeat": {
@@ -86,12 +88,14 @@
             },
             "template": "views/repeat.html",
             "dependencies":["dojox/mobile/TextBox"],
+			"jsmodule": "script/repeat.js"
 		},
 
 		"generate": {
             "type": "dojox.app.view",
             "template": "views/generate.html",
             "dependencies":["dojox/mobile/TextBox", "dojox/mobile/TextArea", "dojox/mvc/Generate"],
+			"jsmodule": "script/generate.js"
 		}
 	}	
 }

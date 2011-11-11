@@ -7,37 +7,6 @@ if (path.charAt(path.length)!="/"){
 }
 dojo.registerModulePath("app",path);
 
-    // search script tag and create new tag in head to fix IE and Firefox not load script.
-    // In IE, set script text to innerHTML with <script type="text/javascript" defer> can load script.
-    // In Firefox and Chrome, not support defer in innerHTML, but support defer in static page.
-    // Use string.match(/<script.*?>.*?<\/script>/, templateString) cannot get matches because templateString contains "\n".
-    // So use string.indexOf to check "<script" and "</script>", then replace "<script*" to empty.
-    var addDynamicScript = function(node){
-        if (!node.templateString) {
-            return;
-        }
-        var tempStr = node.templateString;
-        var scriptText = "";
-        var startIndex = tempStr.indexOf("<script");
-        var endIndex = tempStr.indexOf("<\/script>");
-        
-        while ((startIndex > -1) && (endIndex > -1) && (endIndex > startIndex)) {
-            var str = tempStr.substring(startIndex, endIndex);
-            str = str.replace(/<script.*?>.*?/, "");
-            scriptText += str;
-            
-            startIndex = tempStr.indexOf("<script", endIndex);
-            endIndex = tempStr.indexOf("<\/script>", endIndex);
-        }
-        
-        if (scriptText) {
-            var header = document.getElementsByTagName('head')[0];
-            var scriptTag = document.createElement('script');
-            scriptTag.text = scriptText;
-            header.appendChild(scriptTag);
-        }
-    };
-    
     require(["dojo", "dojox/app/main", "dojox/json/ref", "dojo/text!app/config.json", "dojo/_base/connect"], function(dojo, Application, jsonRef, config, connect){
     //app = Application(dojox.json.ref.resolveJson(config), dojo.body());
     dojo.global.modelApp = {};
@@ -89,10 +58,5 @@ dojo.registerModulePath("app",path);
                    }
                    ];
         app = Application(jsonRef.fromJson(config));
-        
-        connect.subscribe("/app/loadchild", lang.hitch(app, function(node){
-            console.log(node);
-			addDynamicScript(node);
-        }));
 });
 });
