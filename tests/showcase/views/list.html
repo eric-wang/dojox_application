@@ -1,5 +1,10 @@
 <div class="view mblView">
-	<div dojoType="dojox.app.container">
+	<style>
+		.dj_tablet .mblRoundRectCategory {
+			margin: 0px 0px 0px 0px;
+		}
+	</style>
+	<div dojoType="dojox.app.container" region="center">
     <div id="list" dojoType="dojox.mobile.View">
         <ul id="listTabs" dojoType="dojox.mobile.TabBar" barType="segmentedControl">
             <li dojoType="dojox.mobile.TabBarButton" moveTo="roundRectList" selected="true" transition="slide">

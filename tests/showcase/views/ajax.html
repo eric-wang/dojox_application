@@ -1,5 +1,5 @@
 <div class="view mblView">
-    <div dojoType="dojox.app.container">
+    <div dojoType="dojox.app.container" region="center">
         <div dojoType="dojox.mobile.Heading" style="text-align:left;">
             <button id="ajaxBtn" dojoType="dojox.mobile.Button" class="greyBtn headingBtn">
                 Load using AJAX
@@ -9,10 +9,4 @@
             <pre id="ajaxPane" style="white-space:pre-wrap;"></pre>
         </div>
     </div>
-
-	<script type="text/javascript">
-		require(["./src/ajax.js"], function(myajax) {
-			myajax.init();
-		});
-	</script>
 </div>

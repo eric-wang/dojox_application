@@ -78,7 +78,8 @@
 				"dojox/mobile/Switch",
 				"dojox/mobile/Slider"
 			],
-			"template": "views/forms.html"
+			"template": "views/forms.html",
+			"jsmodule": "script/forms.js"
 		},
 
 		"switch":{
@@ -133,7 +134,8 @@
 
 		"map":{
 			"type": "dojox.app.view",
-			"template": "views/map.html"
+			"template": "views/map.html",
+			"jsmodule": "script/map.js"
 		},
 
 		"list":{
@@ -150,9 +152,10 @@
 			"type": "dojox.app.view",
 			"dependencies":[
 				"dojox/mobile/RoundRectDataList",
-				"dojox/app/tests/showcase/src/mobileListData"
+				"dojox/app/tests/showcase/script/listData"
 			],
-			"template": "views/listData.html"
+			"template": "views/listData.html",
+			"jsmodule": "script/listData.js"
 		},
 
 		"transition":{
@@ -164,24 +167,24 @@
 
 		"css3":{
 			"type": "dojox.app.view",
-			"dependencies":[
-				"dojox/app/tests/showcase/src/css3"
-			],
-			"template": "views/css3.html"
+			"template": "views/css3.html",
+			"jsmodule": "script/css3.js"
 		},
 
 		"jsonp":{
 			"type": "dojox.app.view",
 			"dependencies":[
 			],
-			"template": "views/jsonp.html"
+			"template": "views/jsonp.html",
+			"jsmodule": "script/jsonp.js"
 		},
 
 		"ajax":{
 			"type": "dojox.app.view",
 			"dependencies":[
 			],
-			"template": "views/ajax.html"
+			"template": "views/ajax.html",
+			"jsmodule": "script/ajax.js"
 		}
 	}
 }

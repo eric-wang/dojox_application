@@ -1,4 +1,5 @@
 <div class="view mblView">
+    <div dojotype="dojox.app.container" region="center">
     <div id="tabBarContent" class="label">
         <div id="tabView1" dojoType="dojox.mobile.View" selected="true">
             <div>
@@ -16,7 +17,8 @@
             </div>
         </div>
     </div>
-    <ul id="demoTabBar" dojoType="dojox.mobile.TabBar" single="true" iconBase="images/tabbar_all.png" fixed="bottom">
+	</div>
+    <ul id="demoTabBar" dojoType="dojox.mobile.TabBar" single="true" iconBase="images/tabbar_all.png" region="bottom">
         <li dojotype="dojox.mobile.TabBarButton" moveTo="tabView1" iconPos1="688,0,30,30" iconPos2="784,0,30,30" selected="true">
         </li>
         <li dojotype="dojox.mobile.TabBarButton" moveTo="tabView2" iconPos1="720,0,30,30" iconPos2="816,0,30,30">

@@ -1,3 +1,7 @@
+div#css3 {
+	position:absolute;
+}
+
 div#css3Boxes {
 	width: 300px;
 	margin: 100px auto 0 auto;
