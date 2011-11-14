@@ -30,6 +30,78 @@ define([
 
 		// Init callback. Override in user default js module
 		init: function(){
+		},
+
+		_beforeLoad: function(){
+			this.beforeLoad();
+		},
+
+		beforeLoad: function(){
+
+		},
+
+		_loading: function(){
+			this.loading();
+		},
+
+		loading: function(){
+
+		},
+
+		_afterLoad: function(){
+			this.afterLoad();
+		},
+
+		afterLoad: function(){
+
+		},
+
+		_beforeTransition: function(){
+			beforeTransition();
+		},
+
+		beforeTransition: function(){
+
+		},
+
+		_inTransition: function(){
+			inTransition();
+		},
+
+		inTransition: function(){
+
+		},
+
+		_afterTransition: function(){
+			afterTransition();
+		},
+
+		afterTransition: function(){
+
+		},
+
+		_beforeDestroy: function(){
+			beforeDestroy();
+		},
+
+		beforeDestroy: function(){
+
+		},
+
+		_destroying: function(){
+			destroying();
+		},
+
+		destroying: function(){
+
+		},
+
+		_afterDestroy: function(){
+			afterDestroy();
+		},
+
+		afterDestroy: function(){
+
 		}
     });
 });

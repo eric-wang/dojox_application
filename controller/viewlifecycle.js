@@ -6,7 +6,7 @@ define(["dojo/_base/declare", "dojo/_base/connect"], function(declare, connect){
 			LOADING:			2,	//loading
 			AFTERLOAD:			3,	//after load view
 			BEFORETRANSITION:		4,	//before transition
-			TRANSITION:			5,	//transition
+			INTRANSITION:			5,	//transition
 			AFTERTRANSITION:		6,	//after transition
 			BEFOREDESTROY:			7,	//before destroy
 			DESTROYING:			8,	//destroying
