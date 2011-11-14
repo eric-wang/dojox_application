@@ -1,16 +1,15 @@
-define(["dojo/_base/lang",
-		"dojo/_base/connect",
-		"dojo/dom",
-		"dojo/dom-class",
+define(["dojo/_base/lang", 
+		"dojo/_base/connect", 
+		"dojo/dom","dojo/dom-class",
 		"dijit/registry",
 		"dojo/data/ItemFileWriteStore",
-		"dojox/mobile/common",
+		"dojox/mobile/common", // dojox.mobile.createDomButton
 		"dojox/mobile/RoundRectDataList"
 ],function(lang, connect, dom, domClass, registry, ItemFileWriteStore, mobile, RoundRectDataList) {
-	lang.getObject("dojox.app.tests.showcase.src.mobileLists", true);
-	dojox.app.tests.showcase.src.mobileLists = function() {
-		var static_data = {
-			items: [
+	lang.getObject("dojox.app.script.mobileLists", true);
+	dojox.app.script.mobileLists = function() {
+		var static_data = { 
+			items: [ 
 				{label: "Apple"},
 				{label: "Banana"},
 				{label: "Cherry"},
@@ -66,15 +65,15 @@ define(["dojo/_base/lang",
 		};
 	}();
 	return {
-		init: function() {
+		init: function() { 
 			var view = registry.byId("mobileLists");
-			var isInit = false;
-			connect.connect(view, "onAfterTransitionIn", view, function(){
-				if (!isInit) {
-					this.resize();
-					isInit = true;
-				};
-			});
+//			var isInit = false;
+//			connect.connect(view, "onAfterTransitionIn", view, function(){
+//				if (!isInit) {
+//					this.resize();
+//					isInit = true;
+//				};
+//			});
 			mobile.createDomButton(dom.byId("mobileListAddBtn"));
 			mobile.createDomButton(dom.byId("mobileListDelBtn"));
 		}
