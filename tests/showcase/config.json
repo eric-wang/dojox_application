@@ -17,8 +17,7 @@
 		"dojox/mobile/EdgeToEdgeCategory",
 		"dojox/mobile/EdgeToEdgeList",
 		"dojox/mobile/ListItem",
-		"dojox/app/container",
-		"dojox/app/pane"
+		"dojox/app/container"
 	],
 	// Modules for the app.  The are basically used as the second
 	// array of mixins in a dojo.declare().  Modify the top level behavior
