@@ -21,11 +21,11 @@
 		<script language="JavaScript" type="text/javascript">
 			dojo.require("dojox.mobile.RoundRectList");
 			dojo.require("dojox.mobile.ListItem");
-			dojo.require("dojox.app.widget.ScrollableView");
+			dojo.require("dojox.app.container");
 		</script>
 	</head>
 	<body style="visibility:hidden;">
-		<div id="foo" dojoType="dojox.app.widget.ScrollableView" selected="true">
+		<div id="foo" dojoType="dojox.app.container" scrollable="true" selected="true">
 			<ul dojoType="dojox.mobile.RoundRectList">
 				<li dojoType="dojox.mobile.ListItem" icon="../images/i-icon-1.png" moveTo="bar" transition="slide">
 					Slide 1
