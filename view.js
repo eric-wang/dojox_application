@@ -8,8 +8,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_Container", "dijit/_C
 		widgetsInTemplate: true,
 		templateString: '<div></div>',
 		toString: function(){return this.id},
-		activate:function(){},
-		deactivate: function(){},
+
 		//Temporary work around for getting a null when calling getParent
 		getParent: function(){return null;},
 

@@ -1,9 +1,8 @@
 define([
 	"dojo/_base/lang",
 	"dojo/_base/declare",
-	"dojo/_base/connect",
-	"./viewlifecycle"], 
-	function(lang, declare, connect, viewlifecycle){
+	"dojo/_base/connect"],
+	function(lang, declare, connect){
 	return declare("dojox.app.controller.viewcontroller", [], {
 		// Load user define javascipt code
 		// Use configuration file to configure js module.
@@ -28,80 +27,16 @@ define([
 			});
 		},
 
-		// Init callback. Override in user default js module
+		// init callback. Override in user default js module
 		init: function(){
 		},
 
-		_beforeLoad: function(){
-			this.beforeLoad();
+		// view activate callback. Override in user default js module
+		activate:function(){
 		},
 
-		beforeLoad: function(){
-
+		// view deactivate callback. Override in user default js module
+		deactivate: function(){
 		},
-
-		_loading: function(){
-			this.loading();
-		},
-
-		loading: function(){
-
-		},
-
-		_afterLoad: function(){
-			this.afterLoad();
-		},
-
-		afterLoad: function(){
-
-		},
-
-		_beforeTransition: function(){
-			beforeTransition();
-		},
-
-		beforeTransition: function(){
-
-		},
-
-		_inTransition: function(){
-			inTransition();
-		},
-
-		inTransition: function(){
-
-		},
-
-		_afterTransition: function(){
-			afterTransition();
-		},
-
-		afterTransition: function(){
-
-		},
-
-		_beforeDestroy: function(){
-			beforeDestroy();
-		},
-
-		beforeDestroy: function(){
-
-		},
-
-		_destroying: function(){
-			destroying();
-		},
-
-		destroying: function(){
-
-		},
-
-		_afterDestroy: function(){
-			afterDestroy();
-		},
-
-		afterDestroy: function(){
-
-		}
     });
 });
