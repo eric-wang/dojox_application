@@ -1,10 +1,16 @@
-define(["dojo/_base/declare", "dojo/_base/lang", "dijit/_WidgetBase", "dijit/_Container", "dijit/_Contained", "./widget/_ScrollableMixin","./layout/_layoutMixin"], 
-function(declare, lang, WidgetBase, Container, Contained, ScrollableMixin, layoutMixin){
+define(["dojo/_base/declare", "dojo/_base/lang", "dojo/dom-attr", "dijit/_WidgetBase", "dijit/_Container", "dijit/_Contained", "./widget/_ScrollableMixin","./layout/_layoutMixin"], 
+function(declare, lang, dattr, WidgetBase, Container, Contained, ScrollableMixin, layoutMixin){
     return declare("dojox.app.container", [WidgetBase, Container, Contained, layoutMixin], {
-        buildRendering: function(){ 
+        buildRendering: function(){
+			//set default region="center"
+			if(!this.region){
+				this.region = "center";	
+				dattr.set(this.srcNodeRef, "region", "center");
+			}
 			this.inherited(arguments);
+
 			// Mixin _scrollableMixin if the container scrollable="true"
-			if(this.scrollable){
+			if(this.scrollable && this.scrollable=="true"){
 				var scrollableMixin = new ScrollableMixin();
 				lang.mixin(this, scrollableMixin);
 
