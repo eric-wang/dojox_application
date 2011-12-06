@@ -6,7 +6,9 @@ define(["dojo/_base/kernel",
 	"dojo/ready",
 	"dojo/_base/window",
 	"dojo/dom-construct",
-	"./scene"],
+	"./scene",
+	"dojo/store/Memory",
+	"dojo/data/ItemFileWriteStore"],
 	function(dojo, lang, declare, deferred, connect, ready, baseWindow, dom, sceneCtor){
 
         dojo.experimental("dojox.app");
@@ -17,24 +19,28 @@ define(["dojo/_base/kernel",
 			    //create stores in the configuration.
 			    for (var item in params.stores){
 			        if(item.charAt(0)!=="_"){//skip the private properties
-			            var type = params.stores[item].type? params.stores[item].type : "dojo.store.Memory";
+			            var storeCtor;
 			            var config = {};
 			            if(params.stores[item].params){
 			                dojo.mixin(config, params.stores[item].params);
 			            }
-			            var storeCtor = dojo.getObject(type);
 			            if(config.data && lang.isString(config.data)){
 			                //get the object specified by string value of data property
 			                //cannot assign object literal or reference to data property
 			                //because json.ref will generate __parent to point to its parent
 			                //and will cause infinitive loop when creating StatefulModel.
-			                config.data = dojo.getObject(config.data);
-			            }
-			            params.stores[item].store = new storeCtor(config);
+                            var type = params.stores[item].type? params.stores[item].type : "dojo.store.Memory";
+                            storeCtor = dojo.getObject(type);
+                            config.data = dojo.getObject(config.data);
+                        }
+                        else if(config.url){ //Add ItemFileWriteStore support
+                            var type = params.stores[item].type? params.stores[item].type : "dojo.data.ItemFileWriteStore";
+                            storeCtor = dojo.getObject(type);
+                        }
+                        params.stores[item].store = new storeCtor(config);
 			        }
 			    }
 			}
-
 		},
 
 		// load default view and startup the default view
