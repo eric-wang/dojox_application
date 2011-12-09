@@ -2,14 +2,16 @@ define(["dojo/_base/kernel",
 	"dojo/_base/lang",
 	"dojo/_base/declare",
 	"dojo/_base/Deferred",
+	"dojo/DeferredList",
 	"dojo/_base/connect",
 	"dojo/ready",
 	"dojo/_base/window",
 	"dojo/dom-construct",
 	"./scene",
+	"./model",
 	"dojo/store/Memory",
 	"dojo/data/ItemFileWriteStore"],
-	function(dojo, lang, declare, deferred, connect, ready, baseWindow, dom, sceneCtor){
+	function(dojo, lang, declare, deferred, deferredList, connect, ready, baseWindow, dom, sceneCtor, model){
 
         dojo.experimental("dojox.app");
 	var Application = declare([sceneCtor], {
@@ -45,14 +47,38 @@ define(["dojo/_base/kernel",
 
 		// load default view and startup the default view
         start: function(applicaton){
-            var child = this.loadChild();
+			// Load application namespace data model.
+			// If the data model is a deferred ItemFileWriteStore,
+			// it need to wait for the data model resolved and then bind to child view.
+			// Or the data model namespace will failed for parent's loadedModels is not ready.
+			// TODO: Fix view namespace data model binding later, toDoApp need to use this feature.
+			this.loadedModels = model(this.models, null);
+			this.deferredModelLists = [];
+			var deferList = [];
 
-            deferred.when(child, dojo.hitch(this, function(){
-                this.startup();
+			for(var item in this.loadedModels){
+				if(this.loadedModels[item].then){
+					this.deferredModelLists.push(item);
+					deferList.push(this.loadedModels[item]);
+				}
+			}
+			var list = new deferredList(deferList);
 
-                //set application status to STARTED
-                this.setStatus(this.lifecycle.STARTED);
-            }));
+			list.then(dojo.hitch(this, function(models){
+				for(var i=0; i<this.deferredModelLists.length; i++){
+					if(models[i][0]){ // deferred object resolve success
+						this.loadedModels[this.deferredModelLists[i]] = models[i][1]; //replace deferred data model with real data 
+					}
+				}
+
+				var child = this.loadChild();
+				deferred.when(child, dojo.hitch(this, function(){
+					this.startup();
+
+					//set application status to STARTED
+					this.setStatus(this.lifecycle.STARTED);
+				}));
+			}));
         },
 		templateString: "<div></div>",
 		selectedChild: null,
