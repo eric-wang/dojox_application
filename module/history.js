@@ -17,7 +17,7 @@ define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/declare", "dojo/on"],
 		waitingQueue:[],
 
 		onStartTransition: function(evt){
-			console.log("onStartTransition", evt.detail.href, history.state);
+//			console.log("onStartTransition", evt.detail.href, history.state);
 
 // =======
 // Temporary work around for dojox.app showcase.

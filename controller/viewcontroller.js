@@ -20,11 +20,10 @@ define([
 				return;
 			}
 
-			var _this = this;
-			require(["./"+jsmodule], function(module){
-				lang.mixin(_this, module);
-				_this.init();
-			});
+			require(["./"+jsmodule], dojo.hitch(this, function(module){
+				lang.mixin(this, module);
+				this.init();
+			}));
 		},
 
 		// init callback. Override in user default js module

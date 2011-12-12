@@ -20,10 +20,11 @@ define(["dojo/_base/kernel",
 	"./model", 
 	"./view", 
 	"./bind",
-	"./layout/_layoutMixin"], 
-	function(dojo,declare,connect, array,deferred,dlang,has,dstyle,dgeometry,cls,dconstruct,dattr,query,dijit,dojox,WidgetBase,Templated,WidgetsInTemplate,transit, model, baseView, bind,layoutMixin){
+	"./layout/_layoutMixin",
+	"./controller/viewcontroller"], 
+	function(dojo,declare,connect, array,deferred,dlang,has,dstyle,dgeometry,cls,dconstruct,dattr,query,dijit,dojox,WidgetBase,Templated,WidgetsInTemplate,transit, model, baseView, bind,layoutMixin, viewcontroller){
 	
-	return declare("dojox.app.scene", [WidgetBase, Templated, WidgetsInTemplate, layoutMixin], {
+	return declare("dojox.app.scene", [WidgetBase, Templated, WidgetsInTemplate, layoutMixin, viewcontroller], {
 		isContainer: true,
 		widgetsInTemplate: true,
 		defaultView: "default",
@@ -180,6 +181,8 @@ define(["dojo/_base/kernel",
 				// call _layoutMixin startup to layout children first
 				this.inherited(arguments);
 				
+				// call view controller _init method
+				this._init();
 				// startup children
 				array.forEach(this.getChildren(), function(child){
 					child.startup();
@@ -264,7 +267,7 @@ define(["dojo/_base/kernel",
 			//  are supplied (view1@scene2), then the application should transition to the scene,
 			//  and instruct the scene to navigate to the view.
 			var toId,subIds,next, current = this.selectedChild;
-			console.log("scene", this.id, transitionTo);
+//			console.log("scene", this.id, transitionTo);
 			if (transitionTo){	
 				var parts = transitionTo.split(",");
 				toId= parts.shift();
@@ -318,6 +321,10 @@ define(["dojo/_base/kernel",
 				    }));
 				    return;
 				}
+				else{
+					// next == current, call next.activate method to active/refresh view
+					next.activate();
+				}
 
 				//we didn't need to transition, but continue to propogate.
 				if (subIds && next.transition){
@@ -329,9 +336,9 @@ define(["dojo/_base/kernel",
 			}));
 			return transitionDeferred;
 		},
-		toString: function(){return this.id},
+		toString: function(){return this.id}
 
-		activate: function(){},
-		deactive: function(){}
+//		activate: function(){},
+//		deactive: function(){}
 	});
 });
