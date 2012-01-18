@@ -21,10 +21,10 @@ define(["dojo/_base/kernel",
 	"./view", 
 	"./bind",
 	"./layout/_layoutMixin",
-	"./controller/viewcontroller"], 
-	function(dojo,declare,connect, array,deferred,dlang,has,dstyle,dgeometry,cls,dconstruct,dattr,query,dijit,dojox,WidgetBase,Templated,WidgetsInTemplate,transit, model, baseView, bind,layoutMixin, viewcontroller){
+	"./controller"],
+	function(dojo,declare,connect, array,deferred,dlang,has,dstyle,dgeometry,cls,dconstruct,dattr,query,dijit,dojox,WidgetBase,Templated,WidgetsInTemplate,transit, model, baseView, bind,layoutMixin, controller){
 	
-	return declare("dojox.app.scene", [WidgetBase, Templated, WidgetsInTemplate, layoutMixin, viewcontroller], {
+	return declare("dojox.app.scene", [WidgetBase, Templated, WidgetsInTemplate, layoutMixin, controller], {
 		isContainer: true,
 		widgetsInTemplate: true,
 		defaultView: "default",

@@ -201,7 +201,7 @@ var scrollable = function(/*Object?*/dojo, /*Object?*/dojox){
 			var mt = parseInt(c.style.marginTop) || 0;
 			var h = c.offsetHeight + mt + this.fixedFooterHeight - this._appFooterHeight;
 			domStyle.set(this.domNode, "height", h + "px");
-
+			
 			this._cPos = { // store containerNode's position
 				x: parseInt(c.style.left) || 0,
 				y: parseInt(c.style.top) || 0
@@ -210,7 +210,7 @@ var scrollable = function(/*Object?*/dojo, /*Object?*/dojox){
 				top: "0px",
 				left: "0px"
 			});
-
+			
 			var a = win.doc.activeElement; // focused input field
 			if(a){ // scrolling to show focused input field
 				var at = 0; // top position of focused input field
@@ -221,7 +221,7 @@ var scrollable = function(/*Object?*/dojo, /*Object?*/dojox){
 				if(st > 0){
 					win.body().scrollTop = st;
 				}
-			}
+			}	
 		}else{
 			if(this._cPos){ // restore containerNode's position
 				domStyle.set(c, {
@@ -389,7 +389,7 @@ var scrollable = function(/*Object?*/dojo, /*Object?*/dojox){
 		this._posX = [this.touchStartX];
 		this._posY = [this.touchStartY];
 		this._locked = false;
-
+		
 		if(!this.isFormElement(e.target) && !this.isNested){
 			event.stop(e);
 		}
@@ -490,7 +490,7 @@ var scrollable = function(/*Object?*/dojo, /*Object?*/dojox){
 				connect.disconnect(this._conn[i]);
 			}
 			this._conn = null;
-
+	
 			var n = this._time.length; // # of samples
 			var clicked = false;
 			if(!this._aborted){

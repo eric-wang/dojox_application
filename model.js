@@ -1,16 +1,16 @@
 define(["dojo/_base/kernel", "dojo/_base/Deferred", "dojo/store/DataStore", "dojox/mvc/StatefulModel"],
 function(dojo, deferred, dataStore){
 	return function(config, parent){
-		//load models here. create dojox.newStatefulModel
-		//using the configuration data for models
-		var loadedModels = {};
-		if (parent) {
-			dojo.mixin(loadedModels, parent);
-		}
-		if (config) {
-			for (var item in config) {
-				if (item.charAt(0) !== "_") {
-					var params = config[item].params ? config[item].params : {};
+                //load models here. create dojox.newStatefulModel 
+                //using the configuration data for models
+	        var loadedModels = {};
+	        if(parent){
+	            dojo.mixin(loadedModels, parent);
+	        }
+	        if(config){
+                    for(var item in config){
+                        if(item.charAt(0)!=="_"){
+                            var params = config[item].params ? config[item].params:{};
 					var options;
 					if (params.store.params.data) {
 						options = {
@@ -31,8 +31,8 @@ function(dojo, deferred, dataStore){
 						return model;
 					});
 				}
-			}
-		}
-		return loadedModels;
+                    }
+	        }
+                return loadedModels;
 	}
 });

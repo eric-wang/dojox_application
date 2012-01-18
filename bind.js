@@ -22,13 +22,12 @@ define(["dojo/_base/kernel", "dojo/query" , "dojo/_base/array", "dijit", "dojo/_
                         ref = refProps.ref.replace(/^\s*rel\s*:\s*/, "");
                     }
                 }
-
+                
                 if (ref) {
                     if(ref[0] === "'"){
                         ref = ref.substring(1, ref.length-1);
                     }
                     var model = dojo.getObject(ref, false, models);
-
                     // Load model if it is a defer object create by dojox.data.DataStore
                     if(model && model.then){
                         model.then(function(result){

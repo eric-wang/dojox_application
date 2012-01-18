@@ -43,6 +43,7 @@ define(["dojo/_base/kernel",
 			        }
 			    }
 			}
+
 		},
 
 		// load default view and startup the default view
@@ -51,7 +52,6 @@ define(["dojo/_base/kernel",
 			// If the data model is a deferred ItemFileWriteStore,
 			// it need to wait for the data model resolved and then bind to child view.
 			// Or the data model namespace will failed for parent's loadedModels is not ready.
-			// TODO: Fix view namespace data model binding later, toDoApp need to use this feature.
 			this.loadedModels = model(this.models, null);
 			this.deferredModelLists = [];
 			var deferList = [];
@@ -71,6 +71,8 @@ define(["dojo/_base/kernel",
 					}
 				}
 
+				// bind application level data model to application
+				this.binding = this.loadedModels;
 				var child = this.loadChild();
 				deferred.when(child, dojo.hitch(this, function(){
 					this.startup();
@@ -93,6 +95,14 @@ define(["dojo/_base/kernel",
 	});
 	
 	function generateApp(config,node,appSchema,validate){
+		// register app module path for loading template and jsmodule
+		var path = window.location.pathname;
+		if (path.charAt(path.length) != "/") {
+			path = path.split("/");
+			path.pop();
+			path = path.join("/");
+		}
+		dojo.registerModulePath("app", path);
 
 		//console.log("config.modules: ", config.modules);
 		var modules = config.modules.concat(config.dependencies);

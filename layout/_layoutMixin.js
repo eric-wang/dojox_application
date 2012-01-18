@@ -1,15 +1,14 @@
 define([
 	"dojo/_base/lang", // lang.mixin
+	"dijit/Viewport",
 	"dojo/_base/declare", // declare
 	"dojo/dom-class", // domClass.add domClass.remove
 	"dojo/dom-geometry", // domGeometry.marginBox
 	"dojo/dom-style", // domStyle.getComputedStyle
-	"dojo/_base/sniff", // has("ie")
-	"dojo/_base/window", // win.global
 	"dojo/_base/array",
 	"dojo/query",
 	"./utils"
-], function(lang, declare, domClass, domGeometry, domStyle, has, win, array, query, layoutUtils){
+], function(lang, Viewport,	declare, domClass, domGeometry, domStyle, array, query, layoutUtils){
 	// module:
 	//		dojox/app/layout/_layoutMixin
 	// summary:
@@ -26,16 +25,20 @@ define([
 		//		This class name is applied to the widget's domNode
 		//		and also may be used to generate names for sub nodes,
 		//		for example dijitTabContainer-content.
-		//		baseClass: "dijitLayoutContainer",
+		// baseClass: "dijitLayoutContainer",
 
 		// isLayoutContainer: [protected] Boolean
 		//		Indicates that this widget is going to call resize() on its
 		//		children widgets, setting their size, when they become visible.
-		//		isLayoutContainer: true,
+		// isLayoutContainer: true,
 
 		buildRendering: function(){
 			this.inherited(arguments);
 			domClass.add(this.domNode, "dijitContainer");
+
+			//fix slide transition issue on tablet
+			domStyle.set(this.domNode, "overflow-x", "hidden");
+			domStyle.set(this.domNode, "overflow-y", "auto");
 		},
 
 		startup: function(){
@@ -50,7 +53,7 @@ define([
 			//		startup() in subclasses shouldn't do anything
 			//		size related because the size of the widget hasn't been set yet.
 
-//			if(this._started){ return; }
+			//	if(this._started){ return; }
 
 			// Need to call inherited first - so that child widgets get started
 			// up correctly
@@ -65,13 +68,8 @@ define([
 
 				// Since my parent isn't a layout container, and my style *may be* width=height=100%
 				// or something similar (either set directly or via a CSS class),
-				// monitor when my size changes so that I can re-layout.
-				// For browsers where I can't directly monitor when my size changes,
-				// monitor when the viewport changes size, which *may* indicate a size change for me.
-				this.connect((has("ie")<9) ? this.domNode : win.global, 'onresize', function(){
-					// Using function(){} closure to ensure no arguments to resize.
-					this.resize();
-				});
+				// monitor when viewport size changes so that I can re-layout.
+				this._connects.push(Viewport.on("resize", lang.hitch(this, "resize")));
 			}
 		},
 
@@ -81,7 +79,7 @@ define([
 			// description:
 			//		Change size mode:
 			//			When changeSize is specified, changes the marginBox of this widget
-			//			and forces it to relayout its contents accordingly.
+			//			and forces it to re-layout its contents accordingly.
 			//			changeSize may specify height, width, or both.
 			//
 			//			If resultSize is specified it indicates the size the widget will
@@ -90,7 +88,7 @@ define([
 			//		Notification mode:
 			//			When changeSize is null, indicates that the caller has already changed
 			//			the size of the widget, or perhaps it changed because the browser
-			//			window was resized.  Tells widget to relayout its contents accordingly.
+			//			window was resized.  Tells widget to re-layout its contents accordingly.
 			//
 			//			If resultSize is also specified it indicates the size the widget has
 			//			become.
@@ -148,7 +146,6 @@ define([
 			this.layout();
 		},
 
-		//TODO: full screen layout
 		layout: function(){
 			// summary:
 			//		Widgets override this method to size and position their contents/children.

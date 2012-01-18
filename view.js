@@ -1,6 +1,6 @@
-define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_Container", "dijit/_Contained","dijit/_TemplatedMixin","dijit/_WidgetsInTemplateMixin","./layout/_layoutMixin", "./controller/viewcontroller"],
-	function(declare,Widget,Container,Contained,TemplatedMixin,WidgetsInTemplateMixin, layoutMixin, viewcontroller){
-	return declare("dojox.app.view", [Widget,TemplatedMixin,Container,Contained, WidgetsInTemplateMixin, layoutMixin, viewcontroller], {
+define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_Container", "dijit/_Contained","dijit/_TemplatedMixin","dijit/_WidgetsInTemplateMixin","./layout/_layoutMixin", "./controller"],
+	function(declare,Widget,Container,Contained,TemplatedMixin,WidgetsInTemplateMixin, layoutMixin, controller){
+	return declare("dojox.app.view", [Widget,TemplatedMixin,Container,Contained, WidgetsInTemplateMixin, layoutMixin, controller], {
 		selected: false,
 		keepScrollPosition: true,
 		baseClass: "applicationView mblView",
@@ -11,7 +11,6 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_Container", "dijit/_C
 
 		//Temporary work around for getting a null when calling getParent
 		getParent: function(){return null;},
-
 		startup: function(){
 			if (this._started) {
 				return;
