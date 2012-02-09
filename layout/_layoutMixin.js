@@ -1,6 +1,7 @@
 define([
 	"dojo/_base/lang", // lang.mixin
 	"dijit/Viewport",
+	"dijit/registry",
 	"dojo/_base/declare", // declare
 	"dojo/dom-class", // domClass.add domClass.remove
 	"dojo/dom-geometry", // domGeometry.marginBox
@@ -8,7 +9,7 @@ define([
 	"dojo/_base/array",
 	"dojo/query",
 	"./utils"
-], function(lang, Viewport,	declare, domClass, domGeometry, domStyle, array, query, layoutUtils){
+], function(lang, Viewport,	registry, declare, domClass, domGeometry, domStyle, array, query, layoutUtils){
 	// module:
 	//		dojox/app/layout/_layoutMixin
 	// summary:
@@ -171,7 +172,7 @@ define([
 				*/
 			}else{
 				children = query("> [region]", this.domNode).map(function(node){
-					var w = dijit.getEnclosingWidget(node);
+					var w = registry.getEnclosingWidget(node);
 					if (w){return w;}
 
 					return {
