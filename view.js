@@ -9,7 +9,7 @@ define(["dojo/_base/declare",
 "./assistant",
 "./utils/model",
 "./utils/bind"],
-function(declare, lang, deferred, parser, connect, domConstruct, TemplatedMixin, WidgetsInTemplateMixin, ViewController, Model, Bind){
+function(declare, lang, deferred, parser, connect, domConstruct, TemplatedMixin, WidgetsInTemplateMixin, Assistant, Model, Bind){
 	return declare("dojox.application.view", [], {
 		constructor: function(params){
 			this.id = "";
