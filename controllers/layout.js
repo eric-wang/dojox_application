@@ -1,34 +1,57 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/_base/array", "dojo/query", "dojo/dom-style", "dojo/dom-attr", "dojo/dom-geometry", "dijit/registry", "../controller", "../layout/utils"],
-function(lang, declare, on, array, query, dstyle, dattr, dgeometry, registry, Controller, layoutUtils){
+define(["dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/_base/window", "dojo/_base/array", "dojo/query", "dojo/dom-style", "dojo/dom-attr", "dojo/dom-geometry", "dijit/registry", "../controller", "../layout/utils"],
+function(lang, declare, on, win, array, query, dstyle, dattr, dgeometry, registry, Controller, layoutUtils){
 	// module:
 	//		dojox/app/controllers/layout
 	// summary:
-	//		Bind "layout" and "resize" events on dojox.app application's dojo.Evented instance.
+	//		Bind "layout" and "select" events on dojox.app application's dojo.Evented instance.
 
 	return declare("dojox.application.controllers.layout", Controller, {
 
 		constructor: function(app, events){
 			// summary:
-			//		bind "layout" and "resize" events on application dojo.Evented instance.
+			//		bind "layout" and "select" events on application dojo.Evented instance.
 			//
 			// app:
 			//		dojox.app application instance.
 			// events:
 			//		{event : handler}
 			this.events = {
-				"resize": this.resize,
+				"layout": this.layout,
 				"select": this.select
 			};
 			this.inherited(arguments);
+			// bind "resize" event to do browser's resize
+			this.bind(win.global, "resize", lang.hitch(this, this.onResize));
 		},
 
-		layout: function(view){
+		onResize: function(){
+			var view = this.app;
+			while(view){
+				this._doResize(view);
+				view = view.selectedChild;
+			}
+		},
+
+		layout: function(event){
 			// summary:
 			//		Response to dojox.app "layout" event.
 			//
 			// example:
 			//		Use dojo.on.emit to trigger "layout" event, and this function will response the event. For example:
 			//		|	on.emit(this.app.evented, "layout", view);
+			//
+			// event: Object
+			//		{"view":view, "changeSize":changeSize, "resultSize":resultSize}
+
+			var view = event.view;
+			var changeSize = event.changeSize || null;
+			var resultSize = event.resultSize || null;
+			this._doResize(view, changeSize, resultSize);
+		},
+
+		_doLayout: function(view){
+			// summary:
+			//		do view layout.
 			//
 			// view: Object
 			//		view instance needs to do layout.
@@ -91,24 +114,13 @@ function(lang, declare, on, array, query, dstyle, dattr, dgeometry, registry, Co
 			}
 		},
 
-		resize: function(event){
-			// summary:
-			//		Response to dojox.app "resize" event.
-			//
-			// example:
-			//		Use dojo.on.emit to trigger "resize" event, and this function will response the event. For example:
-			//		|	on.emit(this.app.evented, "resize", view);
-			//
-			// event: Object
-			//		{"view":view, "changeSize":changeSize, "resultSize":resultSize}
-
-			var view = event.view;
-			var changeSize = event.changeSize || null;
-			var resultSize = event.resultSize || null;
-			this._doResize(view, changeSize, resultSize);
-		},
-
 		_doResize: function(view, changeSize, resultSize){
+			// summary:
+			//		resize view.
+			//
+			// view: Object
+			//		view instance needs to do layout.
+
 			var node = view.domNode;
 			// set margin box size, unless it wasn't specified, in which case use current size
 			if(changeSize){
@@ -144,7 +156,7 @@ function(lang, declare, on, array, query, dstyle, dattr, dgeometry, registry, Co
 				h: bb.h - pe.h
 			};
 
-			this.layout(view);
+			this._doLayout(view);
 		},
 
 		select: function(event){

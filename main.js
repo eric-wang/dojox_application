@@ -134,7 +134,7 @@ function(lang, declare, Deferred, on, Evented, ready, baseWindow, dom, Model, Vi
 							console.log("application started.");
 						}));
 					}else{
-						on.emit(this.evented, "resize", {"view":this});
+						on.emit(this.evented, "layout", {"view":this});
 						this.setStatus(this.lifecycle.STARTED);
 						console.log("application started.");
 					}
