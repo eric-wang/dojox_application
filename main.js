@@ -8,12 +8,16 @@ define(["dojo/_base/lang",
 "dojo/dom-construct",
 "./utils/model",
 "./view",
+"./controllers/load",
+"./controllers/transition",
+"./controllers/layout",
+"./controllers/history",
 "dojo/_base/loader",
 "dojo/store/Memory"],
-function(lang, declare, deferred, on, Evented, ready, baseWindow, dom, Model, View){
+function(lang, declare, Deferred, on, Evented, ready, baseWindow, dom, Model, View, loadController, transitionController, layoutController, historyController){
 	dojo.experimental("dojox.app");
 
-	var Application = declare([], {
+	var Application = declare(null, {
 		constructor: function(params, node){
 			lang.mixin(this, params);
 			this.params = params;
@@ -24,14 +28,11 @@ function(lang, declare, deferred, on, Evented, ready, baseWindow, dom, Model, Vi
 			this.controllers = [];
 			this.children = {};
 			this.loadedModels = {};
-			this.evented = new Evented();
 
 			// Create a new domNode and append to body
 			// Need to bind startTransition event on application domNode,
 			// Because dojox.mobile.ViewController bind startTransition event on document.body
-			this.domNode = dom.create("div", {
-				id: this.id
-			});
+			this.domNode = dom.create("div", {style: "width:100%; height:100%"});
 			node.appendChild(this.domNode);
 		},
 
@@ -67,13 +68,13 @@ function(lang, declare, deferred, on, Evented, ready, baseWindow, dom, Model, Vi
 					requireItems.push(controllers[i]);
 				}
 
-				var def = new deferred();
+				var def = new Deferred();
 				require(requireItems, function(){
 					def.resolve.call(def, arguments);
 				})
 
-				var controllerDef = new deferred();
-				deferred.when(def, lang.hitch(this, function(){
+				var controllerDef = new Deferred();
+				Deferred.when(def, lang.hitch(this, function(){
 					for (var i = 0; i < arguments[0].length; i++) {
 						// Store Application object on each application level controller.
 						this.controllers.push(new arguments[0][i](this));
@@ -85,7 +86,17 @@ function(lang, declare, deferred, on, Evented, ready, baseWindow, dom, Model, Vi
 		},
 
 		// load default view and startup the default view
-		start: function(applicaton){
+		start: function(){
+			// create application controller instances
+			new loadController(this);
+			new transitionController(this);
+			new layoutController(this);
+			new historyController(this);
+
+			// move _startView from history module to application
+			var hash=window.location.hash;
+			this._startView= ((hash && hash.charAt(0)=="#")?hash.substr(1):hash)||this.defaultView;
+
 			//create application level data store
 			this.createDataStore(this.params);
 
@@ -102,22 +113,31 @@ function(lang, declare, deferred, on, Evented, ready, baseWindow, dom, Model, Vi
 					assistant: this.assistant
 				});
 				this.view.start();
+
+				this.domNode = this.view.domNode;
 			}
 
 			// create application level controller
 			var controllers = this.createControllers(this.params.controllers);
 
-			deferred.when(controllers, lang.hitch(this, function(result){
-				// emit loadview event and let controller to load view.
-				on.emit(this.evented, "loadView", {
-					viewId: this.defaultView,
-					parent: this
-				});
-				this.selectedView = this.children[this.id + '_' + this.defaultView];
-				deferred.when(this.selectedView.start(), lang.hitch(this, function(){
-					this.setStatus(this.lifecycle.STARTED);
-					this.selectedView.select();
-					console.log("application started.");
+			Deferred.when(controllers, lang.hitch(this, function(result){
+				// emit load event and let controller to load view.
+				on.emit(this.evented, "load", {"target": this.defaultView});
+
+				Deferred.when(this.evented.loadPromise, lang.hitch(this, function(){
+					this.selectedChild = this.children[this.id + '_' + this.defaultView];
+					if(this._startView !== this.defaultView){
+						on.emit(this.evented, "load", {"target": this._startView});
+						Deferred.when(this.evented.loadPromise, lang.hitch(this, function(){
+							on.emit(this.evented, "transition", {"target": this._startView});
+							this.setStatus(this.lifecycle.STARTED);
+							console.log("application started.");
+						}));
+					}else{
+						on.emit(this.evented, "resize", {"view":this});
+						this.setStatus(this.lifecycle.STARTED);
+						console.log("application started.");
+					}
 				}));
 			}));
 		}

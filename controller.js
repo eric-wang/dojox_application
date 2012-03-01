@@ -1,59 +1,81 @@
-define(["dojo/_base/lang",
-"dojo/_base/declare",
-"dojo/on"],
-function(lang, declare, on){
-	return declare("dojox.application.controller", [], {
-		/**
-		 * bind event when create a controller instance
-		 * @param {Object} events			events
-		 * @param {Object} application		app instance, every controller should contain the app instance
-		 */
-		constructor: function(application, events){
+define(["dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/Evented"],
+function(lang, declare, on, Evented){
+	// module:
+	//		dojox/app/controller
+	// summary:
+	//		Bind events on dojox.app application's dojo.Evented instance or document.
+
+	return declare("dojox.application.controller", null, {
+		constructor: function(app, events){
+			// summary:
+			//		bind events on application dojo.Evented instance.
+			//		bind css selector events on document.
+			//
+			// app:
+			//		dojox.app application instance.
+			// events:
+			//		{event : handler}
+
 			this.events = this.events || events;
-			this.application = application;
-			if (this.events) {
-				console.log("bind event in controller constructor, ", this.events);
+			this.signals = [];
+			this.app = app;
+			if(!this.app.evented){
+				this.app.evented = new Evented();
+			}
+			if(this.events){
 				for(var item in this.events){
-					if (item.charAt(0) !== "_") {//skip the private properties
-						if (item.indexOf(':') > 0) {
+					if(item.charAt(0) !== "_"){//skip the private properties
+						if(item.indexOf(':') > 0){
 							this.bind(document, item, lang.hitch(this, this.events[item]));
-						}
-						else{
-							this.bind(this.application.evented, item, lang.hitch(this, this.events[item]));
+						}else{
+							this.bind(this.app.evented, item, lang.hitch(this, this.events[item]));
 						}
 					}
 				}
 			}
 		},
 
-		bind: function(evented, event, callback){
-			if(!callback){
-				callback = this._getHandler(event);
+		bind: function(evented, event, handler){
+			// summary:
+			//		Bind event on dojo.Evented instance, document, domNode or window.
+			//		Save event signal in controller instance.
+			//
+			// evented: Object
+			//		dojo.Evented instance, document, domNode or window
+			// event: String
+			//		event
+			// handler: Function
+			//		event handler
+
+			if(!handler){
+				console.warn("bind event '"+event+"' without callback function.");
 			}
-			on(evented, event, callback);
-			this.events[event] = callback;
+			var signal = on(evented, event, handler);
+			this.signals.push({
+				"event": event,
+				"evented": evented,
+				"signal": signal
+			});
 		},
 
-		unbind: function(){
+		unbind: function(evented, event){
+			// summary:
+			//		remove a binded event signal.
+			//
+			// evented: Object
+			//		dojo.Evented instance, document, domNode or window
+			// event: String
+			//		event
 
-		},
-
-		_getHandler: function(event){
-			return function(args){
-				_fire(event, args);
-			}
-		},
-
-		_fire: function(event, args){
-			if (this.events[event]) {
-				try {
-					this.events[event].apply(args);
+			var len = this.signals.length;
+			for(var i=0; i<len; i++){
+				if((this.signals[i]['event'] == event) && (this.signals[i]['evented'] == evented)){
+					this.signals[i]['signal'].remove();
+					this.signals.splice(i, 1);
+					return;
 				}
-				catch (e) {
-					console.error("exception in controller handler for:", evt);
-					console.error(e);
-				}
 			}
+			console.warn("event '"+event+"' not bind on ", evented);
 		}
 	});
 });

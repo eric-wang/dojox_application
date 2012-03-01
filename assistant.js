@@ -13,24 +13,28 @@ define([
 		//	"assistant": "./script/simple.js"
 		// }
 
-		// view lifecycle init. Override in user define view assistant
+		// view lifecycle init. Override in view's assistant
 		init: function(){
 		},
 
-		// view lifecycle beforeActivate. Override in user define view assistant
+		// view lifecycle beforeActivate. Override in view's assistant
 		beforeActivate:function(){
 		},
 
-		// view lifecycle afterActivate. Override in user define view assistant
+		// view lifecycle afterActivate. Override in view's assistant
 		afterActivate:function(){
 		},
 
-		// view lifecycle beforeDeactivate. Override in user define view assistant
+		// view lifecycle beforeDeactivate. Override in view's assistant
 		beforeDeactivate: function(){
 		},
 
-		// view lifecycle afterDeactivate. Override in user define view assistant
+		// view lifecycle afterDeactivate. Override in view's assistant
 		afterDeactivate: function(){
+		},
+
+		// view lifecycle destory. Override in view's assistant
+		destory: function(){
 		}
     });
 });

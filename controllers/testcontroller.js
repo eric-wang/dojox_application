@@ -5,7 +5,7 @@ function(lang, declare, Controller){
 	/**
 	 * This is a test controller. Will be removed after test completely.
 	 */
-	return declare("dojox.application.controller.testcontroller", [Controller], {
+	return declare("dojox.application.controllers.testcontroller", [Controller], {
 
 		constructor: function(){
 			this.events = {

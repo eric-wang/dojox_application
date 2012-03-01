@@ -4,13 +4,14 @@ define(["dojo/_base/declare",
 "dojo/parser",
 "dojo/_base/connect",
 "dojo/dom-construct",
+"dojo/dom-attr",
 "dijit/_TemplatedMixin",
 "dijit/_WidgetsInTemplateMixin",
 "./assistant",
 "./utils/model",
 "./utils/bind"],
-function(declare, lang, deferred, parser, connect, domConstruct, TemplatedMixin, WidgetsInTemplateMixin, Assistant, Model, Bind){
-	return declare("dojox.application.view", [], {
+function(declare, lang, Deferred, parser, connect, domConstruct, dattr, TemplatedMixin, WidgetsInTemplateMixin, Assistant, Model, Bind){
+	return declare("dojox.application.view", null, {
 		constructor: function(params){
 			this.id = "";
 			this.name = "";
@@ -18,12 +19,12 @@ function(declare, lang, deferred, parser, connect, domConstruct, TemplatedMixin,
 			this.parent = null;
 			this.children = {};
 			this._start = false;
-			this._selected = false;
 			this.assistantInstance = null;
+			this.selectedChild = null;
 
 			lang.mixin(this, params);
 			// mixin views configuration to current view instance.
-			if (this.parent.views) {
+			if(this.parent.views){
 				lang.mixin(this, this.parent.views[this.name]);
 			}
 			var assistantInstance = new Assistant();
@@ -32,54 +33,54 @@ function(declare, lang, deferred, parser, connect, domConstruct, TemplatedMixin,
 
 		// start view
 		start: function(){
-			if (this._start) {
+			if(this._start){
 				return this;
 			}
 
 			// create DOM node from templateString
-			if (this.templateString) {
+			if(this.templateString){
 				this.startup();
-			}
-			// load from templateString
-			else {
-				if (!this.dependencies) {
+			}else{ // load from templateString
+				if(!this.dependencies){
 					this.dependencies = [];
 				}
 				// load view assistant
 				var assistant = this.assistant;
-				if (assistant) {
+				if(assistant){
 					var index = assistant.indexOf('.js');
-					if (index != -1) {
+					if(index != -1){
 						assistant = assistant.substring(0, index);
 					}
 					this.dependencies = ["app/" + assistant].concat(this.dependencies);
 				}
 
 				var deps = this.template ? this.dependencies.concat(["dojo/text!app/" + this.template]) : this.dependencies.concat([]);
-				var def = new deferred();
-				if (deps.length > 0) {
+				var def = new Deferred();
+				if(deps.length > 0){
 					require(deps, function(){
 						def.resolve.call(def, arguments);
 					});
-				}
-				else {
+				}else{
 					def.resolve(true);
 				}
 
-				var loadViewDeferred = new deferred();
-				deferred.when(def, lang.hitch(this, function(){
+				var loadViewDeferred = new Deferred();
+				Deferred.when(def, lang.hitch(this, function(){
 					this.templateString = this.template ? arguments[0][arguments[0].length - 1] : "<div></div>";
-					this.assistantInstance = arguments[0][0]; // view assistant is the first object of arguements
+					if(this.assistant) {
+						this.assistantInstance = arguments[0][0]; // view assistant is the first object of arguements
+					}
 					this.startup();
+					this._start = true;
 					loadViewDeferred.resolve(this);
 				}));
 				return loadViewDeferred;
 			}
+			return this;
 		},
 
 		startup: function(){
 			this.widget = this.render(this.templateString);
-			this.widget.id = this.id;
 			//Todo: create view data model
 
 			//Todo: bind data to widget
@@ -89,15 +90,20 @@ function(declare, lang, deferred, parser, connect, domConstruct, TemplatedMixin,
 
 			//start widget
 			this.widget.startup();
+			
+			// set widget attribute
+			dattr.set(this.domNode, "id", this.id);
+			dattr.set(this.domNode, "region", "center");
+			dattr.set(this.domNode, "style", "width:100%; height:100%");
+			this.widget.region = "center";
 
 			//mixin view assistant
-			if (this.assistantInstance) {
+			if(this.assistantInstance){
 				lang.mixin(this, this.assistantInstance);
 			}
 
 			// call view assistant's init() method to initialize view
 			this.init();
-			this._start = true;
 		},
 
 		render: function(templateString){
@@ -113,19 +119,8 @@ function(declare, lang, deferred, parser, connect, domConstruct, TemplatedMixin,
 			//load child's model if it is not loaded before
 			if (!this.loadedModels) {
 				this.loadedModels = Model(this.models, this.parent);
-				//TODO need to find out a better way to get all bindable controls in a view
 				Bind([widget], this.loadedModels);
 			}
-		},
-
-		// TODO: display view domNode
-		select: function(){
-			this._selected = true;
-		},
-
-		// TODO: undisplay view domNode
-		unselect: function(){
-			this._selected = false;
 		}
 	});
 });
