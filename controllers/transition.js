@@ -108,18 +108,25 @@ function(lang, declare, on, transit, Controller){
 				//assume next is already loaded so that this.set(...) will not return
 				//a promise object. this.set(...) will handles the this.selectedChild,
 				//activate or deactivate views and refresh layout.
-//				parent.set("selectedChild", next);
+				current.beforeDeactivate();
+				next.beforeActivate();
+
 				on.emit(this.app.evented, "select", {"parent":parent, "view":next});
 
 				var result = transit(current.domNode, next.domNode, lang.mixin({}, opts, {
 					transition: parent.defaultTransition || "none"
 				}));
 				result.then(lang.hitch(this, function(){
+					current.afterDeactivate();
+					next.afterActivate();
 					if(subIds){
 						this._doTransition(subIds, opts, next);
 					}
 				}));
 				return result; //dojo.DeferredList
+			}else{
+				next.beforeActivate();
+				next.afterActivate();
 			}
 
 			// do sub transition like transition from "tabScene,tab1" to "tabScene,tab2"

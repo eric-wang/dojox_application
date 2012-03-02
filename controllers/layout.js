@@ -179,23 +179,25 @@ function(lang, declare, on, win, array, query, dstyle, dattr, dgeometry, registr
 
 			if(view !== parent.selectedChild){
 				if(parent.selectedChild){
-					if(parent.selectedChild.beforeDeactivate){
-						parent.selectedChild.beforeDeactivate();
-					}
+// view lifecycle call, move to transition
+//					if(parent.selectedChild.beforeDeactivate){
+//						parent.selectedChild.beforeDeactivate();
+//					}
 					dstyle.set(parent.selectedChild.domNode, "zIndex", 25);
 				}
 
 				dstyle.set(view.domNode, "display", "");
 				dstyle.set(view.domNode, "zIndex", 50);
 				parent.selectedChild = view;
-				if(parent._started){
-					if(view.startup && !view._started){
-						view.startup();
-					}
-					else if(view.afterActivate){
-						view.afterActivate();
-					}
-				}
+// view lifecycle call, move to transition
+//				if(parent._started){
+//					if(view.startup && !view._started){
+//						view.startup();
+//					}
+//					else if(view.afterActivate){
+//						view.afterActivate();
+//					}
+//				}
 				this._doResize(parent);
 			}
 		}
