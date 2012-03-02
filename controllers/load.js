@@ -100,6 +100,9 @@ function(lang, declare, on, Deferred, Controller, View){
 
 			var loadChildDeferred = new Deferred();
 			Deferred.when(this.createChild(parent, childId, subIds), lang.hitch(this, function(child){
+				if(!subIds && child.defaultView){
+					subIds = child.defaultView;
+				}
 				var parts = subIds.split(',');
 				childId = parts.shift();
 				subIds = parts.join(',');
