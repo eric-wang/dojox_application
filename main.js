@@ -13,7 +13,8 @@ define(["dojo/_base/lang",
 "./controllers/layout",
 "./controllers/history",
 "dojo/_base/loader",
-"dojo/store/Memory"],
+"dojo/store/Memory",
+"dojo/data/ItemFileWriteStore"],
 function(lang, declare, Deferred, on, Evented, ready, baseWindow, dom, Model, View, loadController, transitionController, layoutController, historyController){
 	dojo.experimental("dojox.app");
 
@@ -39,20 +40,24 @@ function(lang, declare, Deferred, on, Evented, ready, baseWindow, dom, Model, Vi
 		createDataStore: function(params){
 			if (params.stores) {
 				//create stores in the configuration.
-				for (var item in params.stores) {
-					if (item.charAt(0) !== "_") {//skip the private properties
-						var type = params.stores[item].type ? params.stores[item].type : "dojo.store.Memory";
+				for(var item in params.stores){
+					if(item.charAt(0) !== "_"){//skip the private properties
+						var storeCtor;
 						var config = {};
-						if (params.stores[item].params) {
+						if(params.stores[item].params){
 							lang.mixin(config, params.stores[item].params);
 						}
-						var storeCtor = lang.getObject(type);
-						if (config.data && lang.isString(config.data)) {
+						if(config.data && lang.isString(config.data)){
 							//get the object specified by string value of data property
 							//cannot assign object literal or reference to data property
 							//because json.ref will generate __parent to point to its parent
 							//and will cause infinitive loop when creating StatefulModel.
-							config.data = lang.getObject(config.data);
+							var type = params.stores[item].type ? params.stores[item].type : "dojo.store.Memory";
+							storeCtor = dojo.getObject(type);
+							config.data = dojo.getObject(config.data);
+						}else if(config.url){ //Add ItemFileWriteStore support
+							var type = params.stores[item].type ? params.stores[item].type : "dojo.data.ItemFileWriteStore";
+							storeCtor = dojo.getObject(type);
 						}
 						params.stores[item].store = new storeCtor(config);
 						this.stores[item] = params.stores[item].store;
@@ -125,7 +130,9 @@ function(lang, declare, Deferred, on, Evented, ready, baseWindow, dom, Model, Vi
 				on.emit(this.evented, "load", {"target": this.defaultView});
 
 				Deferred.when(this.evented.loadPromise, lang.hitch(this, function(){
-					this.selectedChild = this.children[this.id + '_' + this.defaultView];
+					var selectId = this.defaultView.split(",");
+					selectId = selectId.shift();
+					this.selectedChild = this.children[this.id + '_' + selectId];
 					if(this._startView !== this.defaultView){
 						on.emit(this.evented, "load", {"target": this._startView});
 						Deferred.when(this.evented.loadPromise, lang.hitch(this, function(){
