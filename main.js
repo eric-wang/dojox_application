@@ -33,7 +33,7 @@ function(lang, declare, Deferred, on, Evented, ready, baseWindow, dom, Model, Vi
 			// Create a new domNode and append to body
 			// Need to bind startTransition event on application domNode,
 			// Because dojox.mobile.ViewController bind startTransition event on document.body
-			this.domNode = dom.create("div", {style: "width:100%; height:100%"});
+			this.domNode = dom.create("div", {id: this.id, style: "width:100%; height:100%"});
 			node.appendChild(this.domNode);
 		},
 
