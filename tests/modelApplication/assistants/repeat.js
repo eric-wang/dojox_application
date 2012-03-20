@@ -1,40 +1,34 @@
-define(["dojo/dom", "dojo/_base/connect", "dijit/registry"], function(dom, connect, registry){
+define(["dojo/dom", "dojo/_base/connect", "dijit/registry", "dojox/mvc/at", "dojox/mvc/Repeat", 
+        "dojox/mvc/getStateful","dojox/mvc/Output","dojox/mobile/ToolBarButton"], 
+	function(dom, connect, registry, at, Repeat, getStateful, Output){
+
 	return {
 		init: function(){
 			var selectedIndex = 0;
-			var repeatmodel = registry.byId('repeatWidget').ref;
 
 			function setDetailsContext(index){
-				var widget = registry.byId("detailsGroup");
-				widget.set("ref", index);
-				selectedIndex = index;
-				window.selectedIndex = selectedIndex;
+				app.loadedModels.repeatmodels.set("cursorIndex", index);
 			}
+			
 
 			// used in the Repeat Data binding demo
 			function insertResult(index){
-				if (repeatmodel[index].First.value !== "") {
-					var insert = dojox.mvc.newStatefulModel({
-						"data": {
-							"First": "",
-							"Last": "",
-							"Location": "CA",
-							"Office": "",
-							"Email": "",
-							"Tel": "",
-							"Fax": ""
-						}
-					});
-					repeatmodel.add(index, insert);
-					setDetailsContext(parseInt(index) + 1);
-				}
+				var data = {id:Math.random(), "First": "", "Last": "", "Location": "CA", "Office": "", "Email": "",
+							"Tel": "", "Fax": ""};
+				app.loadedModels.repeatmodels.model.push(new getStateful(data));
+				setDetailsContext(app.loadedModels.repeatmodels.model.length-1);
 			};
+
 
 			function deleteResult(index){
-				repeatmodel.remove(index);
+				var nextIndex = app.loadedModels.repeatmodels.get("cursorIndex");
+				if(nextIndex >= index){
+					nextIndex = nextIndex-1;
+				}
+				app.loadedModels.repeatmodels.model.splice(index, 1);
+				app.loadedModels.repeatmodels.set("cursorIndex", nextIndex);
 			};
 
-			window.repeatmodel = repeatmodel;
 			window.setDetailsContext = setDetailsContext;
 			window.insertResult = insertResult;
 			window.deleteResult = deleteResult;

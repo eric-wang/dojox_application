@@ -119,7 +119,8 @@ function(declare, lang, Deferred, parser, connect, domConstruct, dattr, Template
 			//load child's model if it is not loaded before
 			if (!this.loadedModels) {
 				this.loadedModels = Model(this.models, this.parent);
-				Bind([widget], this.loadedModels);
+				//ELC I don't think we need to call bind, things are already bound
+				//Bind([widget], this.loadedModels); 
 			}
 		}
 	});

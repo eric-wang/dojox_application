@@ -107,7 +107,7 @@ function(lang, declare, Deferred, on, Evented, ready, baseWindow, dom, Model, Vi
 
 			// create application level data model
 			this.loadedModels = Model(this.params.models, this);
-
+			
 			// create application template view
 			if(this.template){
 				this.view = new View({

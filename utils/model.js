@@ -1,4 +1,6 @@
-define(["dojo/_base/lang", "dojo/_base/Deferred", "dojo/store/DataStore", "dojox/mvc/_base"], function(dlang, Deferred, dataStore, mvc){
+define(["dojo/_base/lang", "dojo/_base/Deferred", "dojo/store/DataStore", "dojox/mvc/_base", 
+	        "dojox/mvc/EditStoreRefController", "dojox/mvc/EditStoreRefListController"], 
+function(dlang, Deferred,  dataStore, mvc, EditStoreRefController, EditStoreRefListController){
 	return function(config, parent){
 		//load models here. create dojox.newStatefulModel 
 		//using the configuration data for models
@@ -24,9 +26,20 @@ define(["dojo/_base/lang", "dojo/_base/Deferred", "dojo/store/DataStore", "dojox
 							"query": params.store.query ? params.store.query : {}
 						};
 					}
-					loadedModels[item] = Deferred.when(mvc.newStatefulModel(options), function(model){
-						return model;
-					});
+					var modelCtor;
+					var ctrl = null;
+					var type = config[item].type ? config[item].type : "dojox.mvc.StatefulModel";
+					if(type == "dojox.mvc.StatefulModel"){
+						loadedModels[item] = Deferred.when(mvc.newStatefulModel(options), function(model){
+							return model;
+						});						
+					}else{
+						modelCtor = dojo.getObject(type);
+						loadedModels[item] = new modelCtor(options);
+						Deferred.when(loadedModels[item].queryStore(), function(model){
+								return loadedModels[item];
+						});
+					}					
 				}
 			}
 		}
