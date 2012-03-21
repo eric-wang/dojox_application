@@ -6,8 +6,13 @@ define(["dojo/dom", "dojo/_base/connect", "dijit/registry", "dojox/mvc/at", "doj
 		init: function(){
 			var selectedIndex = 0;
 
+			// could have used app.children.modelApp_repeat.loadedModels.repeatmodels 
+			// instead of app.currentLoadedModels.repeatmodels 
+			//var currentModel = app.children.modelApp_repeat.loadedModels.repeatmodels;			
+			var currentModel = app.currentLoadedModels.repeatmodels;
+			
 			function setDetailsContext(index){
-				app.loadedModels.repeatmodels.set("cursorIndex", index);
+				currentModel.set("cursorIndex", index);
 			}
 			
 
@@ -15,18 +20,18 @@ define(["dojo/dom", "dojo/_base/connect", "dijit/registry", "dojox/mvc/at", "doj
 			function insertResult(index){
 				var data = {id:Math.random(), "First": "", "Last": "", "Location": "CA", "Office": "", "Email": "",
 							"Tel": "", "Fax": ""};
-				app.loadedModels.repeatmodels.model.push(new getStateful(data));
-				setDetailsContext(app.loadedModels.repeatmodels.model.length-1);
+				currentModel.model.push(new getStateful(data));
+				setDetailsContext(currentModel.model.length-1);
 			};
 
 
 			function deleteResult(index){
-				var nextIndex = app.loadedModels.repeatmodels.get("cursorIndex");
+				var nextIndex = currentModel.get("cursorIndex");
 				if(nextIndex >= index){
 					nextIndex = nextIndex-1;
 				}
-				app.loadedModels.repeatmodels.model.splice(index, 1);
-				app.loadedModels.repeatmodels.set("cursorIndex", nextIndex);
+				currentModel.model.splice(index, 1);
+				currentModel.set("cursorIndex", nextIndex);
 			};
 
 			window.setDetailsContext = setDetailsContext;

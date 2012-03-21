@@ -2,6 +2,11 @@ define(["dojo/dom", "dojo/_base/connect", "dijit/registry", "dojox/mvc/at", "doj
 	function(dom, connect, registry, at, Group){
 	return {
 		init: function(){
+			// could have used app.children.modelApp_simple.loadedModels.names 
+			// instead of app.currentLoadedModels.names 
+			//var currentModel = app.children.modelApp_simple.loadedModels.names;			
+			var currentModel = app.currentLoadedModels.names;
+
 			function setRef(id, model, attr) {
 				require([
 				         "dijit/registry",
@@ -15,14 +20,14 @@ define(["dojo/dom", "dojo/_base/connect", "dijit/registry", "dojox/mvc/at", "doj
 			};
 
 			connect.connect(dom.byId('shipto'), "click", function(){
-				setRef('addrGroup', app.loadedModels.names.model[0], 'ShipTo');
+				setRef('addrGroup', currentModel.model[0], 'ShipTo');
 			});
 			connect.connect(dom.byId('billto'), "click", function(){
-				setRef('addrGroup', app.loadedModels.names.model[0], 'BillTo');
+				setRef('addrGroup', currentModel.model[0], 'BillTo');
 			});
 			//connect.connect(dom.byId('reset1'), "click", function(){
 			//	console.log("reset called. ");
-			//	app.loadedModels.names.reset();
+			//	currentModel.reset();
 			//	console.log("reset done. ");
 			//});
 

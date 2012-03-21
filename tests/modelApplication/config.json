@@ -51,20 +51,7 @@
 
 	//models and instantiation parameters for the models. Including 'type' as a property allows
 	//one to overide the class that will be used for the model.  By default it is dojox/mvc/model
-	"models": {
-	   "names": {
-			"type": "dojox.mvc.EditStoreRefController",
-	       "params":{
-		      "store": {"$ref":"#stores.namesStore"}
-		   }	       
-		},
-		"repeatmodels": {
-			"type": "dojox.mvc.EditStoreRefListController",
-             "params":{
-             	"store": {"$ref":"#stores.repeatStore"}
-             }           
-	   	}
-	}, 
+	"models": {}, 
 
 	//the name of the scene to load when the app is initialized.
 	"defaultView": "home", 
@@ -83,6 +70,14 @@
 		"simple":{
 			"template": "views/simple.html",
 			"assistant": "assistants/simple.js",		
+			"models": {
+	  		 	"names": {
+					"type": "dojox.mvc.EditStoreRefController",
+					"params":{
+		     		 	"store": {"$ref":"#stores.namesStore"}
+		  		 	}	       
+				}
+			}, 
 			"dependencies":["dojox/mobile/TextBox"]
 		},
 
@@ -91,6 +86,14 @@
             "template": "views/repeat.html",
 			"assistant": "assistants/repeat.js",
             "dependencies":["dojox/mobile/TextBox"],
+            "models": {
+				"repeatmodels": {
+					"type": "dojox.mvc.EditStoreRefListController",
+             		"params":{
+             			"store": {"$ref":"#stores.repeatStore"}
+             		}           
+             	}           
+	   		}            
 		},
 
 		"generate": {

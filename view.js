@@ -80,11 +80,12 @@ function(declare, lang, Deferred, parser, connect, domConstruct, dattr, Template
 		},
 
 		startup: function(){
+			// setup Model before render
+			this.bindModel();
+
 			this.widget = this.render(this.templateString);
 			//Todo: create view data model
 
-			//Todo: bind data to widget
-			this.bindModel(this.widget);
 			this.domNode = this.widget.domNode;
 			this.parent.domNode.appendChild(this.domNode);
 
@@ -119,7 +120,10 @@ function(declare, lang, Deferred, parser, connect, domConstruct, dattr, Template
 			//load child's model if it is not loaded before
 			if (!this.loadedModels) {
 				this.loadedModels = Model(this.models, this.parent);
-				//ELC I don't think we need to call bind, things are already bound
+
+				// save loadedModels into app.currentLoadedModules to make it easier to access the current model
+				app.currentLoadedModels = this.loadedModels;
+				//ELC for dojox.mvc we don't need to call bind, things are already bound
 				//Bind([widget], this.loadedModels); 
 			}
 		}
