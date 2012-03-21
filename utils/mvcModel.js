@@ -1,5 +1,5 @@
-define(["dojo/_base/lang", "dojo/_base/Deferred", "dojo/store/DataStore", "dojox/mvc/_base"], 
-function(dlang, Deferred,  dataStore, mvc){
+define(["dojo/_base/lang", "dojo/_base/Deferred", "dojo/_base/config", "dojo/store/DataStore", "dojox/mvc/_base"], 
+function(dlang, Deferred, config, dataStore, mvc){
 	return function(config, parent){
 		//load models here. create dojox.newStatefulModel 
 		//using the configuration data for models
@@ -27,17 +27,32 @@ function(dlang, Deferred,  dataStore, mvc){
 					}
 					var modelCtor;
 					var ctrl = null;
-					var type = config[item].type ? config[item].type : "dojox.mvc.StatefulModel";
-					if(type == "dojox.mvc.StatefulModel"){
+					var type = config[item].type ? config[item].type : "dojox/mvc/StatefulModel";
+					if(type == "dojox/mvc/StatefulModel"){
 						loadedModels[item] = Deferred.when(mvc.newStatefulModel(options), function(model){
 							return model;
 						});						
 					}else{
-						modelCtor = dojo.getObject(type);
-						loadedModels[item] = new modelCtor(options);
-						Deferred.when(loadedModels[item].queryStore(), function(model){
-								return loadedModels[item];
-						});
+						// need to load the class to use for the model
+						var myRequireDeferred = new Deferred();
+						var currentItem = item;
+						require([type], // require the model type
+								function( requirement ){
+									myRequireDeferred.resolve( requirement );
+								}
+						);
+
+						Deferred.when( myRequireDeferred,
+								function( modelCtor ) {
+									loadedModels[currentItem] = new modelCtor( options );
+									Deferred.when(loadedModels[currentItem].queryStore(), function(model){
+										return loadedModels[currentItem];
+									});
+								},
+								function( err ) { // failure
+									console.error('Error: Attempted to add an unknown model type.', err);
+								}
+						); 
 					}					
 				}
 			}

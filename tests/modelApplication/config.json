@@ -72,7 +72,7 @@
 			"assistant": "assistants/simple.js",		
 			"models": {
 	  		 	"names": {
-					"type": "dojox.mvc.EditStoreRefController",
+					"type": "dojox/mvc/EditStoreRefController",
 					"params":{
 		     		 	"store": {"$ref":"#stores.namesStore"}
 		  		 	}	       
@@ -87,8 +87,10 @@
 			"assistant": "assistants/repeat.js",
             "dependencies":["dojox/mobile/TextBox"],
             "models": {
+
 				"repeatmodels": {
-					"type": "dojox.mvc.EditStoreRefListController",
+					"modeltype": "dojox/application/utils/mvcModel",
+					"type": "dojox/mvc/EditStoreRefListController",
              		"params":{
              			"store": {"$ref":"#stores.repeatStore"}
              		}           
