@@ -7,11 +7,9 @@ define(["dojo/_base/declare",
 "dojo/dom-attr",
 "dijit/_TemplatedMixin",
 "dijit/_WidgetsInTemplateMixin",
-"./assistant",
-"./utils/mvcModel",
-"./utils/bind"],
+"./assistant"],
 function(declare, lang, Deferred, parser, connect, domConstruct, dattr, TemplatedMixin, 
-		WidgetsInTemplateMixin, Assistant, mvcModel, Bind){
+		WidgetsInTemplateMixin, Assistant){
 	return declare("dojox.application.view", null, {
 		constructor: function(params){
 			this.id = "";
@@ -81,11 +79,7 @@ function(declare, lang, Deferred, parser, connect, domConstruct, dattr, Template
 		},
 
 		startup: function(){
-			// setup Model before render
-			this.bindModel();
-
 			this.widget = this.render(this.templateString);
-			//Todo: create view data model
 
 			this.domNode = this.widget.domNode;
 			this.parent.domNode.appendChild(this.domNode);
@@ -117,47 +111,5 @@ function(declare, lang, Deferred, parser, connect, domConstruct, dattr, Template
 			return widgetTemplate;
 		},
 
-		bindModel: function(widget){
-			console.log("in view bindModel");
-			//load child's model if it is not loaded before
-			if (!this.loadedModels) {
-				this.loadedModels = mvcModel(this.models, this.parent);
-				console.log("in view bindModel, this.loadedModels=");
-				console.log(this.loadedModels);
-
-				app.currentLoadedModels = this.loadedModels;
-				//ELC I don't think we need to call bind, things are already bound
-				//Bind([widget], this.loadedModels); 
-			}
-		}
 	});
-
-		/*
-		bindModel: function(type){
-			//load child's model if it is not loaded before
-			if (!this.loadedModels) {
-				if(this.models && this.models.type && this.models.type == "mvcModel"){
-					this.loadedModels = Model(this.models, this.parent);
-
-					// save loadedModels into app.currentLoadedModules to make it easier to access the current model
-					app.currentLoadedModels = this.loadedModels;
-				//	_self = this;
-					//this.loadedModels = require([this.models.type], function(Model2){
-					//	_self.loadedModels = Model2(_self.models, _self.parent);
-
-						// save loadedModels into app.currentLoadedModules to make it easier to access the current model
-					//	app.currentLoadedModels = _self.loadedModels;
-					//});					
-				}else {
-					this.loadedModels = Model(this.models, this.parent);
-
-					// save loadedModels into app.currentLoadedModules to make it easier to access the current model
-					app.currentLoadedModels = this.loadedModels;
-					//ELC for dojox.mvc we don't need to call bind, things are already bound
-					//Bind([widget], this.loadedModels); 
-				}
-			}
-		}
-	});
-	*/
 });

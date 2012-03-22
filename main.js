@@ -6,7 +6,6 @@ define(["dojo/_base/lang",
 "dojo/ready",
 "dojo/_base/window",
 "dojo/dom-construct",
-"./utils/model",
 "./view",
 "./controllers/load",
 "./controllers/transition",
@@ -15,7 +14,7 @@ define(["dojo/_base/lang",
 "dojo/_base/loader",
 "dojo/store/Memory",
 "dojo/data/ItemFileWriteStore"],
-function(lang, declare, Deferred, on, Evented, ready, baseWindow, dom, Model, View, loadController, transitionController, layoutController, historyController){
+function(lang, declare, Deferred, on, Evented, ready, baseWindow, dom, View, loadController, transitionController, layoutController, historyController){
 	dojo.experimental("dojox.app");
 
 	var Application = declare(null, {
@@ -104,9 +103,6 @@ function(lang, declare, Deferred, on, Evented, ready, baseWindow, dom, Model, Vi
 
 			//create application level data store
 			this.createDataStore(this.params);
-
-			// create application level data model
-			this.loadedModels = Model(this.params.models, this);
 			
 			// create application template view
 			if(this.template){
