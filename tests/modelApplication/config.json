@@ -13,9 +13,13 @@
 		"dojox/mobile/RoundRect",
 		"dojox/mobile/Heading",
 		"dojox/mvc/StatefulModel",
+		"dojox/mvc/EditStoreRefController",
+		"dojox/mvc/EditStoreRefListController",
 		"dojo/store/Memory",
 		"dojox/mvc/Group",
         "dojox/mvc/Repeat",
+        "dojox/mvc/Output",
+		"dojox/mobile/deviceTheme",        
         "dojox/mvc"
 	],
 
@@ -47,13 +51,7 @@
 
 	//models and instantiation parameters for the models. Including 'type' as a property allows
 	//one to overide the class that will be used for the model.  By default it is dojox/mvc/model
-	"models": {
-	   "names": {
-	       "params":{
-		      "store": {"$ref":"#stores.namesStore"}
-		   }	       
-	   }
-	}, 
+	"models": {}, 
 
 	//the name of the scene to load when the app is initialized.
 	"defaultView": "home", 
@@ -72,21 +70,32 @@
 		"simple":{
 			"template": "views/simple.html",
 			"assistant": "assistants/simple.js",		
+			"models": {
+	  		 	"names": {
+					"type": "dojox/mvc/EditStoreRefController",
+					"params":{
+		     		 	"store": {"$ref":"#stores.namesStore"}
+		  		 	}	       
+				}
+			}, 
 			"dependencies":["dojox/mobile/TextBox"]
 		},
 
 		"repeat": {
             "type": "dojox.app.view",
-            "models": {
-                "repeatmodels": {
-                    "params":{
-                        "store": {"$ref":"#stores.repeatStore"}
-                    }           
-                }
-            },
             "template": "views/repeat.html",
 			"assistant": "assistants/repeat.js",
             "dependencies":["dojox/mobile/TextBox"],
+            "models": {
+
+				"repeatmodels": {
+					"modeltype": "dojox/application/utils/mvcModel",
+					"type": "dojox/mvc/EditStoreRefListController",
+             		"params":{
+             			"store": {"$ref":"#stores.repeatStore"}
+             		}           
+             	}           
+	   		}            
 		},
 
 		"generate": {
