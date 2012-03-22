@@ -27,7 +27,9 @@
 	// array of mixins in a dojo.declare().  Modify the top level behavior
 	// of the application, how it processes the config or any other life cycle
 	// by creating and including one or more of these
-	"controllers": [],
+	"controllers": [
+		"dojox/application/controllers/mvcModel"
+	],
 	
 	"modules": [
 		"dojox/application/module/lifecycle"
@@ -51,7 +53,14 @@
 
 	//models and instantiation parameters for the models. Including 'type' as a property allows
 	//one to overide the class that will be used for the model.  By default it is dojox/mvc/model
-	"models": {}, 
+	"models": {
+	  		 	"names": {
+					"type": "dojox/mvc/EditStoreRefController",
+					"params":{
+		     		 	"store": {"$ref":"#stores.namesStore"}
+		  		 	}	       
+				}
+	}, 
 
 	//the name of the scene to load when the app is initialized.
 	"defaultView": "home", 
@@ -70,14 +79,7 @@
 		"simple":{
 			"template": "views/simple.html",
 			"assistant": "assistants/simple.js",		
-			"models": {
-	  		 	"names": {
-					"type": "dojox/mvc/EditStoreRefController",
-					"params":{
-		     		 	"store": {"$ref":"#stores.namesStore"}
-		  		 	}	       
-				}
-			}, 
+			"models": {}, 
 			"dependencies":["dojox/mobile/TextBox"]
 		},
 
@@ -87,9 +89,7 @@
 			"assistant": "assistants/repeat.js",
             "dependencies":["dojox/mobile/TextBox"],
             "models": {
-
 				"repeatmodels": {
-					"modeltype": "dojox/application/utils/mvcModel",
 					"type": "dojox/mvc/EditStoreRefListController",
              		"params":{
              			"store": {"$ref":"#stores.repeatStore"}
