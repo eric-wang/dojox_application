@@ -49,7 +49,7 @@ function(lang, declare, on, Deferred, Controller, View){
 		createModel: function(view, parent){
 			// if the models for this view have already been created use them
 			if (view.modelsLoaded) {
-				app.currentLoadedModels = view.loadedModels;
+				window[this.app.id].currentLoadedModels = view.loadedModels;
 				return;
 			}
 			console.log("in createModel in mvcModel controller");
@@ -109,7 +109,7 @@ function(lang, declare, on, Deferred, Controller, View){
 			}
 			view.loadedModels = loadedModels;
 			view.modelsLoaded = true;
-			app.currentLoadedModels = loadedModels;
+			window[this.app.id].currentLoadedModels = loadedModels;
 		}
 	});
 });
