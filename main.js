@@ -7,14 +7,14 @@ define(["dojo/_base/lang",
 "dojo/_base/window",
 "dojo/dom-construct",
 "./view",
-"./controllers/load",
-"./controllers/transition",
-"./controllers/layout",
-"./controllers/history",
+"./controllers/Load",
+"./controllers/Transition",
+"./controllers/Layout",
+"./controllers/History",
 "dojo/_base/loader",
 "dojo/store/Memory",
 "dojo/data/ItemFileWriteStore"],
-function(lang, declare, Deferred, on, Evented, ready, baseWindow, dom, View, loadController, transitionController, layoutController, historyController){
+function(lang, declare, Deferred, on, Evented, ready, baseWindow, dom, View, LoadController, TransitionController, LayoutController, HistoryController){
 	dojo.experimental("dojox.app");
 
 	var Application = declare(null, {
@@ -22,7 +22,8 @@ function(lang, declare, Deferred, on, Evented, ready, baseWindow, dom, View, loa
 			lang.mixin(this, params);
 			this.params = params;
 			this.stores = {};
-			this.id = params.id;
+			this.id = params.id || "app";
+			window[this.id] = {}; //init global namespace for application
 			this.defaultView = params.defaultView;
 			this.widgetId = params.id;
 			this.controllers = [];
@@ -92,14 +93,14 @@ function(lang, declare, Deferred, on, Evented, ready, baseWindow, dom, View, loa
 		// load default view and startup the default view
 		start: function(){
 			// create application controller instances
-			new loadController(this);
-			new transitionController(this);
-			new layoutController(this);
-			new historyController(this);
+			new LoadController(this);
+			new TransitionController(this);
+			new LayoutController(this);
+			new HistoryController(this);
 
 			// move _startView from history module to application
-			var hash=window.location.hash;
-			this._startView= ((hash && hash.charAt(0)=="#")?hash.substr(1):hash)||this.defaultView;
+			var hash = window.location.hash;
+			this._startView = ((hash && hash.charAt(0)=="#")?hash.substr(1):hash)||this.defaultView;
 
 			//create application level data store
 			this.createDataStore(this.params);
@@ -123,25 +124,20 @@ function(lang, declare, Deferred, on, Evented, ready, baseWindow, dom, View, loa
 
 			Deferred.when(controllers, lang.hitch(this, function(result){
 				// emit load event and let controller to load view.
-				on.emit(this.evented, "load", {"target": this.defaultView});
-
-				Deferred.when(this.evented.loadPromise, lang.hitch(this, function(){
+				on.emit(this.evented, "load", {"target": this.defaultView,"callback":lang.hitch(this, function(){
 					var selectId = this.defaultView.split(",");
 					selectId = selectId.shift();
 					this.selectedChild = this.children[this.id + '_' + selectId];
 					if(this._startView !== this.defaultView){
-						on.emit(this.evented, "load", {"target": this._startView});
-						Deferred.when(this.evented.loadPromise, lang.hitch(this, function(){
-							on.emit(this.evented, "transition", {"target": this._startView});
-							this.setStatus(this.lifecycle.STARTED);
-							console.log("application started.");
-						}));
+						on.emit(this.evented, "transition", {"target": this._startView});
+						this.setStatus(this.lifecycle.STARTED);
+						console.log("application started.");
 					}else{
 						on.emit(this.evented, "layout", {"view":this});
 						this.setStatus(this.lifecycle.STARTED);
 						console.log("application started.");
 					}
-				}));
+				})});
 			}));
 		}
 	});

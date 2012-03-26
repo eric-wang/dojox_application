@@ -56,9 +56,25 @@ function(declare, lang, Deferred, parser, connect, domConstruct, dattr, Template
 				var deps = this.template ? this.dependencies.concat(["dojo/text!app/" + this.template]) : this.dependencies.concat([]);
 				var def = new Deferred();
 				if(deps.length > 0){
-					require(deps, function(){
-						def.resolve.call(def, arguments);
-					});
+					var requireSignal;
+					try{
+						requireSignal = require.on("error", function(error){
+							if(def.fired != -1){
+								return;
+							}
+							console.error("load dependencies error in createChild.", error);
+							def.reject("load dependencies error.");
+							requireSignal.remove();
+						});
+						require(deps, function(){
+							def.resolve.call(def, arguments);
+							requireSignal.remove();
+						});
+					}catch(ex){
+						console.error("load dependencies error in createChild. ", ex)
+						def.reject("load dependencies error.");
+						requireSignal.remove();
+					}
 				}else{
 					def.resolve(true);
 				}

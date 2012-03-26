@@ -25,11 +25,7 @@ function(lang, declare, on, win, array, query, dstyle, dattr, dgeometry, registr
 		},
 
 		onResize: function(){
-			var view = this.app;
-			while(view){
-				this._doResize(view);
-				view = view.selectedChild;
-			}
+			this._doResize(this.app);
 		},
 
 		layout: function(event){
@@ -157,6 +153,11 @@ function(lang, declare, on, win, array, query, dstyle, dattr, dgeometry, registr
 			};
 
 			this._doLayout(view);
+
+			// do selectedChild layout
+			if(view.selectedChild){
+				this._doResize(view.selectedChild);
+			}
 		},
 
 		select: function(event){
@@ -179,7 +180,7 @@ function(lang, declare, on, win, array, query, dstyle, dattr, dgeometry, registr
 
 			if(view !== parent.selectedChild){
 				if(parent.selectedChild){
-// view lifecycle call, move to transition
+// call view life cycle method, move to transition
 //					if(parent.selectedChild.beforeDeactivate){
 //						parent.selectedChild.beforeDeactivate();
 //					}
@@ -189,7 +190,7 @@ function(lang, declare, on, win, array, query, dstyle, dattr, dgeometry, registr
 				dstyle.set(view.domNode, "display", "");
 				dstyle.set(view.domNode, "zIndex", 50);
 				parent.selectedChild = view;
-// view lifecycle call, move to transition
+// call view life cycle method, move to transition
 //				if(parent._started){
 //					if(view.startup && !view._started){
 //						view.startup();

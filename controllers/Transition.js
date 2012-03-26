@@ -1,11 +1,15 @@
-define(["dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojox/css3/transit", "../controller"],
-function(lang, declare, on, transit, Controller){
+define(["dojo/_base/lang", "dojo/_base/declare", "dojo/on", "dojo/_base/Deferred", "dojox/css3/transit", "../controller"],
+function(lang, declare, on, Deferred, transit, Controller){
 	// module:
 	//		dojox/app/controllers/transition
 	// summary:
 	//		Bind "transition" event on dojox.app application dojo.Evented instance.
-	//		Do transition from parent view to child view.
-	return declare("dojox.application.controllers.transition", Controller, {
+	//		Do transition from one view to another view.
+	return declare("dojox.application.controllers.Transition", Controller, {
+
+		proceeding: false,
+
+		waitingQueue:[],
 
 		constructor: function(app, events){
 			// summary:
@@ -26,20 +30,47 @@ function(lang, declare, on, transit, Controller){
 			//		Response to dojox.app "transition" event.
 			//
 			// example:
-			//		Use dojo.on.emit to trigger "transition" event, and this function will response the event. For example:
+			//		Use dojo.on.emit to trigger "transition" event, and this function will response to the event. For example:
 			//		|	on.emit(this.app.evented, "transition", {"target":target, "opts":opts});
 			//
 			// event: Object
 			//		"transition" event parameter. It should be like this: {"target":target, "opts":opts}
-			// returns:
-			//		A dojo.Deferred object.
-			//		The return value will keep in application dojo/Evented instance, other controllers can get this deferred object from application.
 
-			var target = event.target;
-			var opts = event.opts;
-			var transitionDef = this._doTransition(target, opts, this.app);
-			this.app.evented.transitionDef = transitionDef;
-			return transitionDef;
+			this.proceedTransition(event);
+		},
+
+		proceedTransition: function(transitionEvt){
+			// summary:
+			//		Proceed transition queue by FIFO by default.
+			//		If transition is in proceeding, add the next transition to waiting queue.
+			//
+			// example:
+			//		Use dojo.on.emit to trigger "transition" event, and this function will response to the event. For example:
+			//		|	on.emit(this.app.evented, "transition", {"target":target, "opts":opts});
+			//
+			// event: Object
+			//		"transition" event parameter. It should be like this: {"target":target, "opts":opts}
+
+			if(this.proceeding){
+				console.log("push event", transitionEvt);
+				this.waitingQueue.push(transitionEvt);
+				return;
+			}
+			this.proceeding = true;
+
+			on.emit(this.app.evented, "load", {
+				"target": transitionEvt.target,
+				"callback": lang.hitch(this, function(){
+					var transitionDef = this._doTransition(transitionEvt.target, transitionEvt.opts, this.app);
+					Deferred.when(transitionDef, lang.hitch(this, function(){
+						this.proceeding = false;
+						var nextEvt = this.waitingQueue.shift();
+						if(nextEvt){
+							this.proceedTransition(nextEvt);
+						}
+					}));
+				})
+			});
 		},
 
 		_doTransition: function(transitionTo, opts, parent){
@@ -63,7 +94,6 @@ function(lang, declare, on, transit, Controller){
 			//
 			// returns:
 			//		transit dojo.DeferredList object.
-			//		The return value will keep in application dojo/Evented instance, other controllers can get this deffered object from application.
 
 			if(!parent){
 				throw Error("view parent not found in transition.");
@@ -88,7 +118,7 @@ function(lang, declare, on, transit, Controller){
 			}
 			// if no subIds and next has default view, 
 			// set the subIds to the default view and transition to default view.
-			if(!subIds){
+			if(!subIds && next.defaultView){
 				subIds = next.defaultView;
 			}
 
