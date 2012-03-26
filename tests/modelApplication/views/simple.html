@@ -2,7 +2,7 @@
     <h1 data-dojo-type="dojox.mobile.Heading" data-dojo-props='back:"Home"'>Data Binding Example</h1>
     <form name="testForm" id="testForm">    
   	<div class="field-title">Ship to - Bill to Address</div>
-	<div class="fieldset" data-dojo-type="dojox/mvc/Group" data-dojo-props="target: app.currentLoadedModels.names.model[0]">
+	<div class="fieldset" data-dojo-type="dojox/mvc/Group" data-dojo-props="target: modelApplication.currentLoadedModels.names.model[0]">
   			<table id="table" cellspacing="10"  style="width: 100%">
 						<tr>
 							<td style="width: 100px;" class="layout">First</td>
@@ -35,7 +35,7 @@
 			<button id="billto" type="button" data-dojo-type="dojox.mobile.Button" class="mblBlueButton">Bill To</button>		
 			<br/>
 			<div class="fieldset" id="addrGroup" data-dojo-type="dojox/mvc/Group" 
-							data-dojo-props="target: app.currentLoadedModels.names.model[0].ShipTo">
+							data-dojo-props="target: modelApplication.currentLoadedModels.names.model[0].ShipTo">
 					<table id="table" cellspacing="10"  style="width: 100%">
 						<tr>
 							<td style="width: 100px;" class="layout">Street</td>
@@ -69,6 +69,6 @@
 					</table>
 			</div>
 			<div class="spacer"></div>
-		<!-- <button id="reset1" type="button" data-dojo-type="dojox.mobile.Button" class="mblBlueButton">Reset</button>  -->
+			<button id="reset1" type="button" data-dojo-type="dojox.mobile.Button" class="mblBlueButton">Reset</button>
     </form>
 </div>

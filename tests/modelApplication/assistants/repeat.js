@@ -9,7 +9,7 @@ define(["dojo/dom", "dojo/_base/connect", "dijit/registry", "dojox/mvc/at", "doj
 			// could have used app.children.modelApp_repeat.loadedModels.repeatmodels 
 			// instead of app.currentLoadedModels.repeatmodels 
 			//var currentModel = app.children.modelApp_repeat.loadedModels.repeatmodels;			
-			var currentModel = app.currentLoadedModels.repeatmodels;
+			var currentModel = modelApplication.currentLoadedModels.repeatmodels;
 			
 			function setDetailsContext(index){
 				currentModel.set("cursorIndex", index);

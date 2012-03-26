@@ -3,7 +3,7 @@
     <form name="repeatTestForm" id="repeatTestForm">    
     <div class="field-title">Search Results</div>
         <div id="repeatWidget" class="fieldset" data-dojo-type="dojox/mvc/Repeat" 
-        	data-dojo-props="exprchar: '#', children: app.currentLoadedModels.repeatmodels.model" >
+        	data-dojo-props="exprchar: '#', children: modelApplication.currentLoadedModels.repeatmodels.model" >
            <div class="row">            
                     <input dojoType="dojox.mobile.TextBox"
                         id="nameInput#{this.index}" data-dojo-props="value: dojox.mvc.at('rel:#{this.index}','First')" placeHolder="First Name"></input>
@@ -20,12 +20,12 @@
         </div>
         <div class="spacer"></div>
 		<div data-dojo-type="dojox/mvc/Group" 
-			data-dojo-props="target: dojox.mvc.at(app.currentLoadedModels.repeatmodels, 'cursor')">
+			data-dojo-props="target: dojox.mvc.at(modelApplication.currentLoadedModels.repeatmodels, 'cursor')">
 					<div class="field-title">
 						<div style="display: inline-block;" id="detailsBanner">Details for selected index:</div>
 						<span class="cell" id="indexOutput"
 							data-dojo-type="dojox/mvc/Output"
-							data-dojo-props="value: dojox.mvc.at(app.currentLoadedModels.repeatmodels, 'cursorIndex')"></span>
+							data-dojo-props="value: dojox.mvc.at(modelApplication.currentLoadedModels.repeatmodels, 'cursorIndex')"></span>
 					</div>
 					<table id="table" cellspacing="10"  style="width: 100%">
 						<tr>
