@@ -82,11 +82,25 @@ function(lang, declare, on, Deferred, Controller, View){
 						// need to load the class to use for the model
 						var def = new Deferred();
 						var currentItem = item;
-						require([type], // require the model type
-							function(requirement){
-								def.resolve(requirement);
-							}
-						);
+						var requireSignal;
+						try{
+							requireSignal = require.on("error", function(error){
+								if(def.fired != -1){
+									return;
+								}
+								def.reject("load data model type error.");
+								requireSignal.remove();
+							});
+							require([type], // require the model type
+								function(requirement){
+									def.resolve(requirement);
+									requireSignal.remove();
+								}
+							);
+						}catch(ex){
+							def.reject("load data model type error.");
+							requireSignal.remove();
+						}
 
 						Deferred.when(def,
 							function( modelCtor ) {
