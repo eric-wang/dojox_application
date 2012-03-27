@@ -27,9 +27,7 @@
 	// array of mixins in a dojo.declare().  Modify the top level behavior
 	// of the application, how it processes the config or any other life cycle
 	// by creating and including one or more of these
-	"controllers": [
-		"dojox/application/controllers/mvcModel"
-	],
+	"controllers": [],
 	
 	"modules": [
 		"dojox/application/module/lifecycle"
@@ -55,6 +53,7 @@
 	//one to overide the class that will be used for the model.  By default it is dojox/mvc/model
 	"models": {
 	  		 	"names": {
+					"modelsType": "dojox/application/utils/mvcModel",
 					"type": "dojox/mvc/EditStoreRefController",
 					"params":{
 		     		 	"store": {"$ref":"#stores.namesStore"}
@@ -90,6 +89,7 @@
             "dependencies":["dojox/mobile/TextBox"],
             "models": {
 				"repeatmodels": {
+    				"modelsType": "dojox/application/utils/mvcModel",
 					"type": "dojox/mvc/EditStoreRefListController",
              		"params":{
              			"store": {"$ref":"#stores.repeatStore"}
