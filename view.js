@@ -7,9 +7,10 @@ define(["dojo/_base/declare",
 "dojo/dom-attr",
 "dijit/_TemplatedMixin",
 "dijit/_WidgetsInTemplateMixin",
+"dojox/application/utils/model",
 "./assistant"],
 function(declare, lang, Deferred, parser, connect, domConstruct, dattr, TemplatedMixin, 
-		WidgetsInTemplateMixin, Assistant){
+		WidgetsInTemplateMixin, model, Assistant){
 	return declare("dojox.application.view", null, {
 		constructor: function(params){
 			this.id = "";
@@ -85,7 +86,8 @@ function(declare, lang, Deferred, parser, connect, domConstruct, dattr, Template
 					if(this.assistant) {
 						this.assistantInstance = arguments[0][0]; // view assistant is the first object of arguements
 					}
-					this.startup();
+					this.setupModel();
+					//this.startup();
 					this._start = true;
 					loadViewDeferred.resolve(this);
 				}));
@@ -121,11 +123,24 @@ function(declare, lang, Deferred, parser, connect, domConstruct, dattr, Template
 		render: function(templateString){
 			var widgetTemplate = new TemplatedMixin();
 			var widgetInTemplate = new WidgetsInTemplateMixin();
+			// set the loadedModels here to be able to access the model on the parse.
+			widgetInTemplate.loadedModels = this.loadedModels; 
 			lang.mixin(widgetTemplate, widgetInTemplate);
 			widgetTemplate.templateString = templateString;
 			widgetTemplate.buildRendering();
 			return widgetTemplate;
 		},
 
+		setupModel: function(){
+			//load child's model if it is not already loaded then call startup
+			if (!this.loadedModels) {
+				this.loadedModels = model(this.models, this.parent);
+				console.log("in view bindModel, this.loadedModels for this.name="+this.name);
+				console.log(this.loadedModels);
+				this.startup();
+			}else{
+				this.startup();
+			}
+		}
 	});
 });
