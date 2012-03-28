@@ -5,7 +5,7 @@ define(["dojo/dom", "dojo/_base/connect", "dijit/registry", "dojox/mvc/at", "doj
 			// could have used app.children.modelApp_simple.loadedModels.names 
 			// instead of app.currentLoadedModels.names 
 			//var currentModel = app.children.modelApp_simple.loadedModels.names;			
-			var currentModel = modelApplication.currentLoadedModels.names;
+			var currentModel = this.loadedModels.names;
 
 			function setRef(id, model, attr) {
 				require([
