@@ -16,61 +16,84 @@ function(lang, Deferred, config, dataStore){
 		//		available to the view.
 		// returns: loadedModels 
 		//		 loadedModels is an object holding all of the available loaded models for this view.
+		this.defCount = 0;
 		var loadedModels = {};
+		var allModelsLoadedDeferred = new Deferred();
 		if(parent.loadedModels){
 			lang.mixin(loadedModels, parent.loadedModels);
 		}
 		if(config){
 			var loadModelDeferred = loadedModels;
-			for(var item in config){
-				if(item.charAt(0) !== "_"){
-					// Here we need to create the modelLoader and call it passing in the item and the config[item].params
-					params = config[item].params ? config[item].params : {};
-					var def = new Deferred();
-					
-					var modelLoader = config[item].modelLoader ? config[item].modelLoader : "dojox/application/utils/mvcModel";
-					require([modelLoader], // require the model type
-							function( requirement ){
-								def.resolve( requirement );
-							}
-					);
-					var loadModelDeferred = new Deferred();
-					return Deferred.when(def, lang.hitch(this, function(modelCtor){
-						//	loadedModels[item] = modelCtor(config, params, item);
-						var createModelPromise;
-						try{
-							createModelPromise = modelCtor(config, params, item);
-						}catch(ex){
-							loadModelDeferred.reject("load model error in model.", ex);
-							return loadModelDeferred.promise;
-						}
-						if(createModelPromise.then){
-							Deferred.when(createModelPromise, lang.hitch(this, function(newModel){
-								loadedModels[item] = newModel;
-								//console.log("in model, loadedModels for item="+item);
-								//console.log(loadedModels);
-								loadModelDeferred.resolve(loadedModels);
-								return loadedModels;
-							}),
-							function(){
-								loadModelDeferred.reject("load model error in models.");
-							});
-							return loadModelDeferred;
-						}else{
-							loadedModels[item] = createModelPromise;
-							//console.log("in module else path, loadedModels for item="+item);
-							//console.log(loadedModels);
-							loadModelDeferred.resolve(loadedModels);
-							return loadedModels;
-						}
-					}));
-					return loadModelDeferred;					
+			for(var test in config){
+				if(test.charAt(0) !== "_"){
+					this.defCount++;
 				}
 			}
-			return loadModelDeferred;
+			if(this.defCount == 0){
+				return loadedModels;
+			}
+			for(var item in config){
+				if(item.charAt(0) !== "_"){
+					setupModel(config, item, parent, allModelsLoadedDeferred, loadedModels);
+				}
+			}
+			return allModelsLoadedDeferred;
 		}else{
 			return loadedModels;
 		}
-		return loadModelDeferred;
+		return allModelsLoadedDeferred;
+	};
+
+	function setupModel(config, item, parent, allModelsLoadedDeferred, loadedModels){
+		// Here we need to create the modelLoader and call it passing in the item and the config[item].params
+		params = config[item].params ? config[item].params : {};
+		var def = new Deferred();
+		
+		var modelLoader = config[item].modelLoader ? config[item].modelLoader : "dojox/application/utils/mvcModel";
+		require([modelLoader], // require the model type
+				function( requirement ){
+					def.resolve( requirement );
+				}
+		);
+		var loadModelDeferred = new Deferred();
+		return Deferred.when(def, lang.hitch(this, function(modelCtor){
+			//	loadedModels[item] = modelCtor(config, params, item);
+			var createModelPromise;
+			try{
+				createModelPromise = modelCtor(config, params, item);
+			}catch(ex){
+				loadModelDeferred.reject("load model error in model.", ex);
+				return loadModelDeferred.promise;
+			}
+			if(createModelPromise.then){
+				Deferred.when(createModelPromise, lang.hitch(this, function(newModel){
+					loadedModels[item] = newModel;
+					console.log("in model, loadedModels for item="+item);
+					console.log(loadedModels);
+					this.defCount--;
+					if(this.defCount == 0){
+						allModelsLoadedDeferred.resolve(loadedModels);
+					}
+					loadModelDeferred.resolve(loadedModels);
+					return loadedModels;
+				}),
+				function(){
+					loadModelDeferred.reject("load model error in models.");
+				});
+				return loadModelDeferred;
+			}else{
+				loadedModels[item] = createModelPromise;
+				console.log("in module else path, loadedModels for item="+item);
+				console.log(loadedModels);
+				this.defCount--;
+				if(this.defCount == 0){
+					allModelsLoadedDeferred.resolve(loadedModels);
+				}
+				loadModelDeferred.resolve(loadedModels);
+				return loadedModels;
+			}
+		}));
+		return loadModelDeferred;					
 	}
+	
 });

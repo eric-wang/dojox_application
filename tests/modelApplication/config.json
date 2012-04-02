@@ -54,7 +54,15 @@
 					"params":{
 		     		 	"store": {"$ref":"#stores.namesStore"}
 		  		 	}	       
+				},
+	  		 	"names2": {
+					"modelLoader": "dojox/application/utils/mvcModel",
+					"type": "dojox/mvc/EditStoreRefController",
+					"params":{
+		     		 	"store": {"$ref":"#stores.namesStore"}
+		  		 	}	       
 				}
+				
 	}, 
 
 	//the name of the scene to load when the app is initialized.
@@ -85,6 +93,13 @@
             "dependencies":["dojox/mobile/TextBox"],
             "models": {
 				"repeatmodels": {
+    				"modelLoader": "dojox/application/utils/mvcModel",
+					"type": "dojox/mvc/EditStoreRefListController",
+             		"params":{
+             			"store": {"$ref":"#stores.repeatStore"}
+             		}           
+             	},           
+				"repeatmodels2": {
     				"modelLoader": "dojox/application/utils/mvcModel",
 					"type": "dojox/mvc/EditStoreRefListController",
              		"params":{

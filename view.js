@@ -124,7 +124,8 @@ function(declare, lang, Deferred, parser, connect, domConstruct, dattr, Template
 			var widgetTemplate = new TemplatedMixin();
 			var widgetInTemplate = new WidgetsInTemplateMixin();
 			// set the loadedModels here to be able to access the model on the parse.
-			widgetInTemplate.loadedModels = this.loadedModels; 
+			widgetInTemplate.loadedModels = this.loadedModels;
+			console.log("in view render, this.loadedModels =",this.loadedModels);
 			lang.mixin(widgetTemplate, widgetInTemplate);
 			widgetTemplate.templateString = templateString;
 			widgetTemplate.buildRendering();
@@ -147,6 +148,7 @@ function(declare, lang, Deferred, parser, connect, domConstruct, dattr, Template
 						if(newModel){
 							this.loadedModels = newModel;
 						}
+						console.log("in view setupModel, this.loadedModels =",this.loadedModels);
 						this.startup();
 					}),
 					function(){
@@ -154,6 +156,7 @@ function(declare, lang, Deferred, parser, connect, domConstruct, dattr, Template
 					});
 				}else{ // model returned the actual model not a promise, so set loadedModels and call startup
 					this.loadedModels = createPromise;
+					console.log("in view setupModel else, this.loadedModels =",this.loadedModels);
 					this.startup();
 				}
 			}else{ // loadedModels already created so call startup
