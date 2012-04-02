@@ -80,18 +80,16 @@ function(declare, lang, Deferred, parser, connect, domConstruct, dattr, Template
 					def.resolve(true);
 				}
 
-				var loadViewDeferred = new Deferred();
+				this.loadViewDeferred = new Deferred();
 				Deferred.when(def, lang.hitch(this, function(){
 					this.templateString = this.template ? arguments[0][arguments[0].length - 1] : "<div></div>";
 					if(this.assistant) {
 						this.assistantInstance = arguments[0][0]; // view assistant is the first object of arguements
 					}
+					// call setupModel, after setupModel startup will be called after startup the loadViewDeferred will be resolved
 					this.setupModel();
-					//this.startup();
-					this._start = true;
-					loadViewDeferred.resolve(this);
 				}));
-				return loadViewDeferred;
+				return this.loadViewDeferred;
 			}
 			return this;
 		},
@@ -118,6 +116,8 @@ function(declare, lang, Deferred, parser, connect, domConstruct, dattr, Template
 
 			// call view assistant's init() method to initialize view
 			this.init();
+			this._start = true;
+			this.loadViewDeferred.resolve(this);
 		},
 
 		render: function(templateString){
@@ -132,15 +132,33 @@ function(declare, lang, Deferred, parser, connect, domConstruct, dattr, Template
 		},
 
 		setupModel: function(){
-			//load child's model if it is not already loaded then call startup
+			//load views model if it is not already loaded then call startup
 			if (!this.loadedModels) {
-				this.loadedModels = model(this.models, this.parent);
-				console.log("in view bindModel, this.loadedModels for this.name="+this.name);
-				console.log(this.loadedModels);
-				this.startup();
-			}else{
-				this.startup();
-			}
+				var loadModelLoaderDeferred = new Deferred();
+				var createPromise;
+				try{
+					createPromise = model(this.models, this.parent);
+				}catch(ex){
+					loadModelLoaderDeferred.reject("load model error.");
+					return loadModelLoaderDeferred.promise;
+				}
+				if(createPromise.then){  // model returned a promise, so set loadedModels and call startup after the .when
+					Deferred.when(createPromise, lang.hitch(this, function(newModel){
+						if(newModel){
+							this.loadedModels = newModel;
+						}
+						this.startup();
+					}),
+					function(){
+						loadModelLoaderDeferred.reject("load model error.")
+					});
+				}else{ // model returned the actual model not a promise, so set loadedModels and call startup
+					this.loadedModels = createPromise;
+					this.startup();
+				}
+			}else{ // loadedModels already created so call startup
+				this.startup();				
+			}		
 		}
 	});
 });
