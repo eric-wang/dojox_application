@@ -1,5 +1,3 @@
-//define(["dojo/_base/lang", "dojo/_base/Deferred", "dojo/_base/config", "dojo/store/DataStore", "dojox/mvc/_base", "./mvcModel"], 
-//function(lang, Deferred, config, dataStore, mvc, mvcModel){
 define(["dojo/_base/lang", "dojo/_base/Deferred", "dojo/_base/config", "dojo/store/DataStore"], 
 function(lang, Deferred, config, dataStore){
 	return function(/*Object*/ config, /*Object*/ parent){
