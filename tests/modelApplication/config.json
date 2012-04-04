@@ -50,14 +50,14 @@
 	"models": {
 	  		 	"names": {
 					"modelLoader": "dojox/application/utils/mvcModel",
-					"type": "dojox/mvc/EditStoreRefController",
+					"type": "dojox/mvc/EditStoreRefListController",
 					"params":{
 		     		 	"store": {"$ref":"#stores.namesStore"}
 		  		 	}	       
 				},
 	  		 	"names2": {
 					"modelLoader": "dojox/application/utils/mvcModel",
-					"type": "dojox/mvc/EditStoreRefController",
+					"type": "dojox/mvc/EditStoreRefListController",
 					"params":{
 		     		 	"store": {"$ref":"#stores.namesStore"}
 		  		 	}	       

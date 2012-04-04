@@ -1,6 +1,7 @@
 require(["dojo", "dojox/application/main", "dojox/json/ref", "dojo/text!./config.json", "dojo/_base/connect"], function(dojo, Application, jsonRef, config, connect){
 	dojo.global.modelApp = {};
-	modelApp.names = [{
+	modelApp.names =  {identifier: "id", items: [{
+		"id" : "1",
 		"Serial": "360324",
 		"First": "John",
 		"Last": "Doe",
@@ -17,31 +18,6 @@ require(["dojo", "dojox/application/main", "dojox/json/ref", "dojo/text!./config
 			"State": "NY",
 			"Zip": "10532"
 		}
-	}];
-	modelApp.repeatData = [{
-		"First": "Chad",
-		"Last": "Chapman",
-		"Location": "CA",
-		"Office": "1278",
-		"Email": "c.c@test.com",
-		"Tel": "408-764-8237",
-		"Fax": "408-764-8228"
-	}, {
-		"First": "Irene",
-		"Last": "Ira",
-		"Location": "NJ",
-		"Office": "F09",
-		"Email": "i.i@test.com",
-		"Tel": "514-764-6532",
-		"Fax": "514-764-7300"
-	}, {
-		"First": "John",
-		"Last": "Jacklin",
-		"Location": "CA",
-		"Office": "6701",
-		"Email": "j.j@test.com",
-		"Tel": "408-764-1234",
-		"Fax": "408-764-4321"
-	}];
+	}]};
 	app = Application(jsonRef.fromJson(config));
 });
