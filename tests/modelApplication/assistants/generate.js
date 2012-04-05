@@ -1,4 +1,4 @@
-define(["dojo/dom", "dojo/_base/connect", "dijit/registry"], function(dom, connect, registry){
+define(["dojo/dom", "dojo/_base/connect", "dijit/registry", "dojox/mvc/_base"], function(dom, connect, registry, mvc){
 	return {
 		init: function(){
 			// used in the Generate View demo
@@ -6,7 +6,7 @@ define(["dojo/dom", "dojo/_base/connect", "dijit/registry"], function(dom, conne
 			function updateView(){
 				try {
 					var modeldata = dojo.fromJson(dom.byId("modelArea").value);
-					genmodel = dojox.mvc.newStatefulModel({
+					genmodel = mvc.newStatefulModel({
 						data: modeldata
 					});
 					registry.byId("view").set("ref", genmodel);

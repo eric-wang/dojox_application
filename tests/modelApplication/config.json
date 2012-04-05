@@ -12,15 +12,11 @@
 		"dojox/mobile/Button",
 		"dojox/mobile/RoundRect",
 		"dojox/mobile/Heading",
-		"dojox/mvc/StatefulModel",
-		"dojox/mvc/EditStoreRefController",
-		"dojox/mvc/EditStoreRefListController",
 		"dojo/store/Memory",
 		"dojox/mvc/Group",
         "dojox/mvc/Repeat",
         "dojox/mvc/Output",
-		"dojox/mobile/deviceTheme",        
-        "dojox/mvc"
+		"dojox/mobile/deviceTheme"
 	],
 
 	// Modules for the application.  The are basically used as the second
@@ -53,12 +49,20 @@
 	//one to overide the class that will be used for the model.  By default it is dojox/mvc/model
 	"models": {
 	  		 	"names": {
-					"modelsType": "dojox/application/utils/mvcModel",
-					"type": "dojox/mvc/EditStoreRefController",
+					"modelLoader": "dojox/application/utils/mvcModel",
+					"type": "dojox/mvc/EditStoreRefListController",
+					"params":{
+		     		 	"store": {"$ref":"#stores.namesStore"}
+		  		 	}	       
+				},
+	  		 	"names2": {
+					"modelLoader": "dojox/application/utils/mvcModel",
+					"type": "dojox/mvc/EditStoreRefListController",
 					"params":{
 		     		 	"store": {"$ref":"#stores.namesStore"}
 		  		 	}	       
 				}
+				
 	}, 
 
 	//the name of the scene to load when the app is initialized.
@@ -89,7 +93,14 @@
             "dependencies":["dojox/mobile/TextBox"],
             "models": {
 				"repeatmodels": {
-    				"modelsType": "dojox/application/utils/mvcModel",
+    				"modelLoader": "dojox/application/utils/mvcModel",
+					"type": "dojox/mvc/EditStoreRefListController",
+             		"params":{
+             			"store": {"$ref":"#stores.repeatStore"}
+             		}           
+             	},           
+				"repeatmodels2": {
+    				"modelLoader": "dojox/application/utils/mvcModel",
 					"type": "dojox/mvc/EditStoreRefListController",
              		"params":{
              			"store": {"$ref":"#stores.repeatStore"}

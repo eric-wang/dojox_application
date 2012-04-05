@@ -1,0 +1,74 @@
+{
+	"id": "simpleModelApplication",
+	"name": "Simple Model App",
+	"description": "A simple modelApp",
+	"splash": "splash",
+
+	"dependencies": [
+		"dojox/mobile/_base",
+		"dojox/mobile/TabBar",
+		"dojox/mobile/RoundRect",
+		"dojox/mobile/TabBarButton",
+		"dojox/mobile/Button",
+		"dojox/mobile/RoundRect",
+		"dojox/mobile/Heading",
+		"dijit/form/Textbox",
+		"dojo/store/Memory",
+		"dojox/mobile/deviceTheme"
+	],
+
+	// Modules for the application.  The are basically used as the second
+	// array of mixins in a dojo.declare().  Modify the top level behavior
+	// of the application, how it processes the config or any other life cycle
+	// by creating and including one or more of these
+	"controllers": [],
+	
+	"modules": [
+		"dojox/application/module/lifecycle"
+	],
+
+	//stores we are using 
+	"stores": {
+	   "namesStore":{
+	       "type": "dojo.store.Memory",
+		   "params": {
+		      "data": "modelApp.names"
+		   }
+	   }
+	}, 
+
+	//models and instantiation parameters for the models. Including 'type' as a property allows
+	//one to overide the class that will be used for the model. 
+	"models": {
+	  		 	"names": {
+					"modelLoader": "dojox/application/utils/simpleModel",
+					"params":{
+		     		 	"store": {"$ref":"#stores.namesStore"}
+		  		 	}	       
+				}
+				
+	}, 
+
+	//the name of the scene to load when the app is initialized.
+	"defaultView": "home", 
+
+	"defaultTransition": "slide",
+	//scenes are groups of views and models loaded at once	
+	"views": {
+
+		"home": { 
+			"type": "dojox.app.view",
+			"dependencies":["dojox/mobile/ListItem","dojox/mobile/RoundRectList","dojox/mobile/RoundRectCategory","dojox/mobile/Heading"],
+			"template": "views/main.html",
+			"assistant": "assistants/home.js"
+		},
+
+		"simple":{
+			"template": "views/simple.html",
+			"assistant": "assistants/simple.js",		
+			"models": {}, 
+			"dependencies":["dojox/mobile/TextBox"]
+		}
+
+	}	
+}

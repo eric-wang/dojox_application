@@ -6,7 +6,8 @@ define(["dojo/_base/lang",
 "dojo/ready",
 "dojo/_base/window",
 "dojo/dom-construct",
-"./utils/model",
+//"./utils/model",
+"./model",
 "./view",
 "./controllers/Load",
 "./controllers/Transition",
@@ -107,7 +108,37 @@ function(lang, declare, Deferred, on, Evented, ready, baseWindow, dom, model, Vi
 			this.createDataStore(this.params);
 
 			// create application level data model
-			this.loadedModels = model(this.params.models, this);
+			this.setupModel();
+	},
+
+	setupModel: function(){
+		// create application level data model
+			var loadModelLoaderDeferred = new Deferred();
+			var createPromise;
+			try{
+				createPromise = model(this.params.models, this);
+			}catch(ex){
+				loadModelLoaderDeferred.reject("load model error.");
+				return loadModelLoaderDeferred.promise;
+			}
+			if(createPromise.then){
+				Deferred.when(createPromise, lang.hitch(this, function(newModel){
+					this.loadedModels = newModel;
+					this.startup();
+				}),
+				function(){
+					loadModelLoaderDeferred.reject("load model error.")
+				});
+			}else{
+				this.loadedModels = createPromise;
+				this.startup();
+			}
+	},
+
+	
+	// load default view and startup the default view
+	startup: function(){
+			// create application controller instances
 			
 			// create application template view
 			if(this.template){
